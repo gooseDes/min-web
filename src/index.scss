@@ -1,0 +1,84 @@
+@import "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap";
+
+$bg-color: #131317;
+$panel-bg-color: #1f1f23;
+$border-color: #2d2d32dd;
+$divider-color: #2d2d32dd;
+$primary-color: #ffffff;
+$secondary-color: #aaaaaa;
+$border-radius: 16px;
+$border-width: 2px;
+$padding: 12px;
+$font-size-base: 16px;
+$font-family: "Rubik";
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+@view-transition {
+    navigation: auto;
+}
+
+body {
+    font-family: $font-family;
+    background-color: $bg-color;
+}
+
+h1 {
+    font-family: $font-family;
+    font-size: 36px;
+    color: $primary-color;
+    text-align: center;
+    margin: 8px;
+}
+
+p {
+    font-family: $font-family;
+    color: $primary-color;
+}
+
+input {
+    font-family: $font-family;
+    padding: $padding;
+    border-radius: $border-radius;
+    border: $border-width solid $border-color;
+    background-color: $panel-bg-color;
+    color: $primary-color;
+    font-size: $font-size-base;
+}
+
+button {
+    font-family: $font-family;
+    padding: $padding;
+    border-radius: $border-radius;
+    border: $border-width solid $border-color;
+    background-color: $panel-bg-color;
+    color: $primary-color;
+    font-size: $font-size-base;
+}
+
+.main {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100dvw;
+    height: 100dvh;
+    padding: $padding;
+    gap: $padding;
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+}
+
+.panel {
+    background-color: $panel-bg-color;
+    border-radius: $border-radius;
+    border: $border-width solid $border-color;
+    padding: $padding;
+    gap: $padding;
+    display: flex;
+    flex-direction: column;
+}

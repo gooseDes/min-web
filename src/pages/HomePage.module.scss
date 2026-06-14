@@ -1,0 +1,13 @@
+@use "@/index" as *;
+
+.leftPanel {
+    @extend .panel;
+
+    width: 320px;
+}
+
+.contentPanel {
+    @extend .panel;
+
+    flex: 1;
+}
