@@ -6,6 +6,8 @@ $border-color: #2d2d32dd;
 $divider-color: #2d2d32dd;
 $primary-color: #ffffff;
 $secondary-color: #aaaaaa;
+$shadow-color: rgba(0, 0, 0, 0.5);
+$ripple-color: #ffffff66;
 $border-radius: 16px;
 $border-width: 2px;
 $padding: 12px;
@@ -16,6 +18,8 @@ $font-family: "Rubik";
 *::before,
 *::after {
     box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: $border-color transparent;
 }
 
 @view-transition {
@@ -41,6 +45,8 @@ p {
 }
 
 input {
+    @extend .shadow;
+
     font-family: $font-family;
     padding: $padding;
     border-radius: $border-radius;
@@ -51,6 +57,8 @@ input {
 }
 
 button {
+    @extend .shadow;
+
     font-family: $font-family;
     padding: $padding;
     border-radius: $border-radius;
@@ -58,6 +66,10 @@ button {
     background-color: $panel-bg-color;
     color: $primary-color;
     font-size: $font-size-base;
+}
+
+.shadow {
+    box-shadow: 0 4px 4px $shadow-color;
 }
 
 .main {
@@ -74,6 +86,8 @@ button {
 }
 
 .panel {
+    @extend .shadow;
+
     background-color: $panel-bg-color;
     border-radius: $border-radius;
     border: $border-width solid $border-color;
@@ -81,4 +95,5 @@ button {
     gap: $padding;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }

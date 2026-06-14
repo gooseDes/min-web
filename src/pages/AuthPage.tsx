@@ -1,9 +1,25 @@
+import apiClient, { initSocket } from "@/client";
+import Divider from "@components/Divider";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Divider from "../components/Divider";
 import styles from "./AuthPage.module.scss";
 
 function AuthPage() {
+    const emailInputRef = useRef<HTMLInputElement>(null);
+    const passwordInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+
+    async function handleSignIn() {
+        if (!emailInputRef.current || !passwordInputRef.current) return;
+        const res = await apiClient.login(emailInputRef.current.value, passwordInputRef.current.value);
+        if (res.success) {
+            localStorage.setItem("token", res.token);
+            initSocket();
+            await navigate("/", { viewTransition: true });
+        } else {
+            alert(res.message);
+        }
+    }
 
     return (
         <div className={styles.main}>
@@ -11,9 +27,9 @@ function AuthPage() {
                 <h1>Welcome!</h1>
                 <Divider />
                 <div className={styles.form}>
-                    <input type="text" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <button className={styles.button} onClick={() => navigate("/", { viewTransition: true })}>
+                    <input type="text" placeholder="Email" ref={emailInputRef} />
+                    <input type="password" placeholder="Password" ref={passwordInputRef} />
+                    <button className={styles.button} onClick={handleSignIn}>
                         Sign In
                     </button>
                 </div>

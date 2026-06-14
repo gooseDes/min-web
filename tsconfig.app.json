@@ -20,6 +20,14 @@
         "noUnusedParameters": true,
         "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true,
+
+        /* Aliases */
+        "paths": {
+            "@/*": ["./src/*"],
+            "@assets/*": ["./src/assets/*"],
+            "@pages/*": ["./src/pages/*"],
+            "@components/*": ["./src/components/*"],
+        },
     },
     "include": ["src"],
 }

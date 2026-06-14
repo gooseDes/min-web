@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
 
 export default defineConfig({
+    envPrefix: ["VITE_", "MIN_"],
     plugins: [
         react(),
         patchCssModules({
@@ -13,10 +14,12 @@ export default defineConfig({
     ],
     base: "./",
     resolve: {
+        tsconfigPaths: true,
         alias: {
             "@": path.resolve(__dirname, "./src"),
             "@assets": path.resolve(__dirname, "./src/assets"),
             "@pages": path.resolve(__dirname, "./src/pages"),
+            "@components": path.resolve(__dirname, "./src/components"),
         },
     },
     build: {

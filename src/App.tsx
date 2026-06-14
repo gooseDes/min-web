@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { initSocket } from "./client";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 
@@ -8,6 +10,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+    useEffect(() => {
+        initSocket();
+    }, []);
+
     return <RouterProvider router={router} />;
 }
 

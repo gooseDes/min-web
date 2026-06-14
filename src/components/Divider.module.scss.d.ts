@@ -6,20 +6,23 @@
  * https://npmjs.com/vite-css-modules
  */
 
-declare const main: string;
+declare const shadow: string;
 declare const panel: string;
+declare const main: string;
 declare const divider: string;
 
 export {
-	main,
+	shadow,
 	panel,
+	main,
 	divider
 };
 
 declare const __default_export__: {
-	main: typeof main;
+	shadow: typeof shadow;
 	panel: typeof panel;
+	main: typeof main;
 	divider: typeof divider;
 };
 export default __default_export__;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Y0FFQTs7Ozs7Q0FBQTs7Ozs7O0NBQUE7OyJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O2NBRUE7Ozs7OztDQUFBOzs7Ozs7O0NBQUE7OyJ9
