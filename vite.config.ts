@@ -11,6 +11,7 @@ export default defineConfig({
             declarationMap: true,
         }),
     ],
+    base: "./",
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
