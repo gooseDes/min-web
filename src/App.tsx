@@ -1,12 +1,31 @@
 import { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { initSocket } from "./client";
+import MorphThing from "./components/MorphThing";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
+import { morphThingRef } from "./services/morphService";
+
+function RootLayout() {
+    return (
+        <div className="app-container">
+            <main className="content">
+                <Outlet />
+                <MorphThing ref={morphThingRef} />
+            </main>
+        </div>
+    );
+}
 
 const router = createBrowserRouter([
-    { path: "/", element: <HomePage /> },
-    { path: "/auth", element: <AuthPage /> },
+    {
+        path: "/",
+        element: <RootLayout />,
+        children: [
+            { index: true, element: <HomePage /> },
+            { path: "auth", element: <AuthPage /> },
+        ],
+    },
 ]);
 
 function App() {

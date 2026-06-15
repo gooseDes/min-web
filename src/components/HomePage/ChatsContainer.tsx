@@ -1,6 +1,6 @@
 import type { ChatData } from "@min/api-client";
 import { stagger, useAnimate } from "framer-motion";
-import { useImperativeHandle, useState, type Ref } from "react";
+import { useImperativeHandle, useState, type MouseEvent, type Ref } from "react";
 import { flushSync } from "react-dom";
 import ClickableProfile from "../ClickableProfile";
 import styles from "./ChatsContainer.module.scss";
@@ -12,12 +12,13 @@ export interface ChatsContainerHandle {
 
 export interface ChatsContainerProps {
     ref?: Ref<ChatsContainerHandle>;
+    onClick?: (chat: ChatData, e: MouseEvent<HTMLDivElement>) => void;
 }
 
 function ChatsContainer(props: ChatsContainerProps) {
     const [scope, animate] = useAnimate();
     const [chats, setChats] = useState<ChatData[]>([]);
-    const { ref } = props;
+    const { ref, onClick } = props;
 
     useImperativeHandle(ref, () => ({
         setChats: (chats: ChatData[]) => {
@@ -46,6 +47,7 @@ function ChatsContainer(props: ChatsContainerProps) {
                     }.webp`}
                     text={chat.name}
                     isInList={true}
+                    onClick={e => onClick?.(chat, e)}
                 />
             ))}
         </div>

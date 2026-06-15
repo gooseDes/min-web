@@ -10,6 +10,8 @@
     align-items: center;
     gap: math.div($padding, 2);
     border-radius: $border-radius;
+    will-change: transform;
+    text-rendering: geometricPrecision;
     transition:
         background-color 0.25s ease,
         margin-left 0.25s ease;

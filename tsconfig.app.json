@@ -23,11 +23,12 @@
 
         /* Aliases */
         "paths": {
-            "@/*": ["./src/*"],
             "@assets/*": ["./src/assets/*"],
             "@pages/*": ["./src/pages/*"],
             "@components/*": ["./src/components/*"],
             "@hooks/*": ["./src/hooks/*"],
+            "@services/*": ["./src/services/*"],
+            "@/*": ["./src/*"],
         },
     },
     "include": ["src"],

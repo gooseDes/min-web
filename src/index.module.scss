@@ -8,6 +8,7 @@ $primary-color: #ffffff;
 $secondary-color: #aaaaaa;
 $shadow-color: rgba(0, 0, 0, 0.5);
 $ripple-color: #ffffff66;
+$ripple-color-opaque: #7c7c7e;
 $border-radius: 16px;
 $border-width: 2px;
 $padding: 12px;
@@ -23,6 +24,7 @@ $font-family: "Rubik";
     secondaryColor: $secondary-color;
     shadowColor: $shadow-color;
     rippleColor: $ripple-color;
+    rippleColorOpaque: $ripple-color-opaque;
     borderRadius: $border-radius;
     borderWidth: $border-width;
     padding: $padding;
@@ -42,7 +44,10 @@ $font-family: "Rubik";
     navigation: auto;
 }
 
+html,
 body {
+    margin: 0;
+    padding: 0;
     font-family: $font-family;
     background-color: $bg-color;
 }
@@ -83,6 +88,16 @@ button {
     background-color: $panel-bg-color;
     color: $primary-color;
     font-size: $font-size-base;
+    will-change: transform;
+    text-rendering: geometricPrecision;
+    transition:
+        filter 0.2s,
+        scale 0.2s;
+
+    &:hover {
+        filter: brightness(1.2);
+        scale: 1.1;
+    }
 }
 
 .shadow {
