@@ -1,0 +1,15 @@
+{
+    "name": "Min Web",
+    "short_name": "Min Web",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#131317",
+    "theme_color": "#2196f3",
+    "icons": [
+        {
+            "src": "logo512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
