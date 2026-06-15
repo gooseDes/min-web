@@ -2,6 +2,8 @@ import apiClient from "@/client";
 import ClickableProfile from "@/components/ClickableProfile";
 import Divider from "@/components/Divider";
 import ChatsContainer, { type ChatsContainerHandle } from "@/components/HomePage/ChatsContainer";
+import Icon from "@/components/Icon";
+import { faSignIn } from "@fortawesome/free-solid-svg-icons";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -33,16 +35,16 @@ function HomePage() {
                 </div>
                 <div className={styles.userPanel}>
                     <ClickableProfile
+                        style={{ flex: 1 }}
                         image={`${import.meta.env.MIN_API_URL}/avatars/${user.avatar}.webp`}
                         text={user.username}
                     />
+                    <Link to="/auth" viewTransition>
+                        <Icon icon={faSignIn} size={24} className={styles.iconButton}></Icon>
+                    </Link>
                 </div>
             </div>
-            <div className={styles.contentPanel}>
-                <Link to="/auth" viewTransition>
-                    Login
-                </Link>
-            </div>
+            <div className={styles.contentPanel} />
         </div>
     );
 }
