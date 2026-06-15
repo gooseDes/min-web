@@ -26,7 +26,11 @@ function ChatsContainer(props: ChatsContainerProps) {
         show: async () => {
             await animate(".chatItem", { opacity: 0, translateX: -200, scale: 0 }, { duration: 0 });
             animate(".chatItem", { opacity: 1 }, { delay: stagger(0.05) });
-            await animate(".chatItem", { translateX: 0, scale: 1 }, { type: "spring", delay: stagger(0.05) });
+            await animate(
+                ".chatItem",
+                { translateX: 0, scale: 1 },
+                { type: "spring", damping: 15, stiffness: 250, delay: stagger(0.05) },
+            );
         },
     }));
 
@@ -41,6 +45,7 @@ function ChatsContainer(props: ChatsContainerProps) {
                         chat.participants?.find(participant => (participant?.id || -1) !== 1)?.avatar || "default"
                     }.webp`}
                     text={chat.name}
+                    isInList={true}
                 />
             ))}
         </div>

@@ -1,13 +1,20 @@
-@use "@/index" as *;
+@use "@/index.module.scss" as *;
 
-.leftPanel {
-    @extend .panel;
-
+.leftPart {
+    display: flex;
+    flex-direction: column;
     width: 320px;
+    gap: $padding;
 
     @media (orientation: portrait) {
         width: 100%;
     }
+}
+
+.chatsPanel {
+    @extend .panel;
+
+    flex: 1;
 }
 
 .contentPanel {
@@ -18,4 +25,10 @@
     }
 
     flex: 1;
+}
+
+.userPanel {
+    @extend .panel;
+
+    height: 80px;
 }

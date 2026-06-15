@@ -1,4 +1,4 @@
-@use "@/index" as *;
+@use "@/index.module.scss" as *;
 @use "sass:math";
 
 .container {
@@ -16,7 +16,6 @@
 
     &:hover {
         background-color: $ripple-color;
-        margin-left: 10px;
 
         p {
             color: $primary-color;
@@ -35,5 +34,11 @@
         height: 40px;
         object-fit: cover;
         border-radius: 50%;
+    }
+}
+
+.listItem {
+    &:hover {
+        margin-left: 10px;
     }
 }

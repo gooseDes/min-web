@@ -14,6 +14,22 @@ $padding: 12px;
 $font-size-base: 16px;
 $font-family: "Rubik";
 
+:export {
+    bgColor: $bg-color;
+    panelBgColor: $panel-bg-color;
+    borderColor: $border-color;
+    dividerColor: $divider-color;
+    primaryColor: $primary-color;
+    secondaryColor: $secondary-color;
+    shadowColor: $shadow-color;
+    rippleColor: $ripple-color;
+    borderRadius: $border-radius;
+    borderWidth: $border-width;
+    padding: $padding;
+    fontSizeBase: $font-size-base;
+    fontFamily: $font-family;
+}
+
 *,
 *::before,
 *::after {
@@ -42,6 +58,7 @@ h1 {
 p {
     font-family: $font-family;
     color: $primary-color;
+    font-weight: 500;
 }
 
 input {
@@ -95,5 +112,5 @@ button {
     gap: $padding;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    overflow: auto;
 }

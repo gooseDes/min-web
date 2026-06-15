@@ -6,12 +6,38 @@
  * https://npmjs.com/vite-css-modules
  */
 
+declare const bgColor: string;
+declare const panelBgColor: string;
+declare const borderColor: string;
+declare const dividerColor: string;
+declare const primaryColor: string;
+declare const secondaryColor: string;
+declare const shadowColor: string;
+declare const rippleColor: string;
+declare const borderRadius: string;
+declare const borderWidth: string;
+declare const padding: string;
+declare const fontSizeBase: string;
+declare const fontFamily: string;
 declare const shadow: string;
 declare const panel: string;
 declare const main: string;
 declare const divider: string;
 
 export {
+	bgColor,
+	panelBgColor,
+	borderColor,
+	dividerColor,
+	primaryColor,
+	secondaryColor,
+	shadowColor,
+	rippleColor,
+	borderRadius,
+	borderWidth,
+	padding,
+	fontSizeBase,
+	fontFamily,
 	shadow,
 	panel,
 	main,
@@ -19,10 +45,23 @@ export {
 };
 
 declare const __default_export__: {
+	bgColor: typeof bgColor;
+	panelBgColor: typeof panelBgColor;
+	borderColor: typeof borderColor;
+	dividerColor: typeof dividerColor;
+	primaryColor: typeof primaryColor;
+	secondaryColor: typeof secondaryColor;
+	shadowColor: typeof shadowColor;
+	rippleColor: typeof rippleColor;
+	borderRadius: typeof borderRadius;
+	borderWidth: typeof borderWidth;
+	padding: typeof padding;
+	fontSizeBase: typeof fontSizeBase;
+	fontFamily: typeof fontFamily;
 	shadow: typeof shadow;
 	panel: typeof panel;
 	main: typeof main;
 	divider: typeof divider;
 };
 export default __default_export__;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O2NBRUE7Ozs7OztDQUFBOzs7Ozs7O0NBQUE7OyJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztjQUVBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBQUE7OyJ9
