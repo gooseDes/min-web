@@ -3,6 +3,7 @@ import ClickableProfile from "@components/ClickableProfile";
 import Divider from "@components/Divider";
 import ChatsContainer, { type ChatsContainerHandle } from "@components/HomePage/ChatsContainer";
 import MessageInput from "@components/HomePage/MessageInput";
+import MessagesContainer, { type MessagesContainerHandle } from "@components/HomePage/MessagesContainer";
 import Icon from "@components/Icon";
 import IconButton from "@components/IconButton";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
@@ -18,8 +19,11 @@ function HomePage() {
     const [user] = useLocalStorage("user");
     const navigate = useNavigate();
     const chatsContainerRef = useRef<ChatsContainerHandle>(null);
+    const messagesContainerRef = useRef<MessagesContainerHandle>(null);
     const leftPartRef = useRef<HTMLDivElement>(null);
+    const contentPanelRef = useRef<HTMLDivElement>(null);
     const [openedChat, setOpenedChat] = useState<ChatData | null>(null);
+    const [contentPanelHeight, setContentPanelHeight] = useState<number>(0);
 
     useEffect(() => {
         apiClient.fetchChats().then(res => {
@@ -31,11 +35,25 @@ function HomePage() {
                 chatsContainerRef.current?.show();
             }
         });
+
+        const observer = new ResizeObserver(([entry]) => {
+            setContentPanelHeight(entry.contentRect.height);
+        });
+
+        observer.observe(contentPanelRef.current!);
+
+        return () => {
+            observer.disconnect();
+        };
     }, []);
 
-    function openChat(chat: ChatData) {
+    async function openChat(chat: ChatData) {
         leftPartRef.current?.classList.add(styles.mobileHidden);
         setOpenedChat(chat);
+        const messagesRes = await apiClient.fetchChatMessages({ chatId: chat.id });
+        if (messagesRes.success) {
+            messagesContainerRef.current?.setMessages(messagesRes.messages);
+        }
     }
 
     function closeChat() {
@@ -89,8 +107,17 @@ function HomePage() {
                         })()}
                     </motion.div>
                 )}
-                <motion.div layout transition={{ layout: { type: "spring" } }} className={styles.contentPanel}>
-                    {openedChat && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />}
+                <motion.div
+                    layout
+                    transition={{ layout: { type: "spring" } }}
+                    ref={contentPanelRef}
+                    className={styles.contentPanel}
+                >
+                    {openedChat && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                            <MessagesContainer ref={messagesContainerRef} height={contentPanelHeight} />
+                        </motion.div>
+                    )}
                 </motion.div>
                 {openedChat && <MessageInput />}
             </div>

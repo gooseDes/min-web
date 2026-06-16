@@ -67,7 +67,6 @@ const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, r
 
     return (
         <motion.div
-            key="message_input_container"
             className={styles.container}
             initial={{ translateY: 100, opacity: 0 }}
             animate={{ translateY: 0, opacity: 1 }}
@@ -76,25 +75,25 @@ const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, r
             {...rest}
         >
             {/*hasPrefix && (
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            style={{ height: "20px", gap: "4px", padding: "0 16px" }}
-                        >
-                            <Icon icon={faReply} size={12} color={vars.secondary} />
-                            <Text style={[Styles.secondaryText, { fontSize: 14 }]}>{t.replying_to}</Text>
-                            <HapticPressable
-                                hitSlop={16}
-                                style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}
-                                android_ripple={{ color: theme.rippleColor }}
-                                onPress={() => {
-                                    setPrefix("");
-                                }}
-                            >
-                                <Icon name="x" size={12} color={theme.secondaryTextColor} />
-                            </HapticPressable>
-                        </motion.div>
-                    )*/}
+                <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    style={{ height: "20px", gap: "4px", padding: "0 16px" }}
+                >
+                    <Icon icon={faReply} size={12} color={vars.secondary} />
+                    <Text style={[Styles.secondaryText, { fontSize: 14 }]}>{t.replying_to}</Text>
+                    <HapticPressable
+                        hitSlop={16}
+                        style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}
+                        android_ripple={{ color: theme.rippleColor }}
+                        onPress={() => {
+                            setPrefix("");
+                        }}
+                    >
+                        <Icon name="x" size={12} color={theme.secondaryTextColor} />
+                    </HapticPressable>
+                </motion.div>
+            )*/}
             <div className={styles.horizontalRow}>
                 <IconButton className={styles.button} icon={faPaperclip} size={24} />
                 <input
