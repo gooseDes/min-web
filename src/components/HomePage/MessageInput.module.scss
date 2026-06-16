@@ -1,0 +1,46 @@
+@use "@/index.module.scss" as *;
+
+.container {
+    @extend .panel;
+
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    @include mobile {
+        position: absolute;
+        bottom: $padding;
+        left: $padding;
+        width: calc(100dvw - $padding * 4);
+        height: 60px;
+    }
+}
+
+.input {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.button {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.horizontalRow {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}

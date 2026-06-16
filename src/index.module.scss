@@ -1,5 +1,12 @@
 @import "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap";
 
+$breakpoint-mobile: 768px;
+@mixin mobile {
+    @media screen and (max-width: #{$breakpoint-mobile - 1px}) {
+        @content;
+    }
+}
+
 $bg-color: #131317;
 $panel-bg-color: #1f1f23;
 $border-color: #2d2d32dd;
@@ -30,6 +37,13 @@ $font-family: "Rubik";
     padding: $padding;
     fontSizeBase: $font-size-base;
     fontFamily: $font-family;
+}
+
+:root {
+    @include mobile {
+        --padding: $padding * 0.5;
+    }
+    --padding: $padding;
 }
 
 *,
