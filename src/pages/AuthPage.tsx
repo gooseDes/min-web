@@ -1,5 +1,6 @@
 import apiClient, { initSocket } from "@/client";
 import Divider from "@components/Divider";
+import FlatSelector from "@components/FlatSelector";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
@@ -64,13 +65,11 @@ function AuthPage() {
             <div className={styles.contentPanel}>
                 <h1>Welcome!</h1>
                 <Divider />
+                <FlatSelector
+                    options={["Sign In", "Sign Up"]}
+                    onSelect={option => setMode(option === "Sign In" ? "signin" : "signup")}
+                />
                 <div className={styles.form}>
-                    <button
-                        style={{ width: "fit-content", alignSelf: "center" }}
-                        onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-                    >
-                        Switch to {mode === "signin" ? "Sign Up" : "Sign In"}
-                    </button>
                     <AnimatePresence>
                         {mode === "signup" && (
                             <motion.input
@@ -129,7 +128,16 @@ function AuthPage() {
                             className={styles.button}
                             onClick={mode === "signup" ? handleSignUp : handleSignIn}
                         >
-                            {mode === "signup" ? "Sign Up" : "Sign In"}
+                            <motion.p
+                                key={`sign_button_text_${mode}`}
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0 }}
+                                layout
+                                style={{ margin: 0 }}
+                            >
+                                {mode === "signup" ? "Sign Up" : "Sign In"}
+                            </motion.p>
                         </motion.button>
                     </AnimatePresence>
                 </div>
