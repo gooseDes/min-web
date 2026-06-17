@@ -68,9 +68,9 @@ const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, r
     return (
         <motion.div
             className={styles.container}
-            initial={{ translateY: 100, opacity: 0 }}
-            animate={{ translateY: 0, opacity: 1 }}
-            exit={{ translateY: 100, opacity: 0 }}
+            initial={{ translateY: 100 }}
+            animate={{ translateY: 0 }}
+            exit={{ translateY: 100 }}
             layout
             {...rest}
         >

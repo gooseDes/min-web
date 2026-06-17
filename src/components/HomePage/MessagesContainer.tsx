@@ -25,16 +25,18 @@ function MessagesContainer(props: MessagesContainerProps) {
         show: () => {},
     }));
 
+    const renderItem = (_index: number, msg: MessageDataWithSender) => (
+        <p style={{ margin: 0, padding: "8px" }}>
+            {msg.sender.username}: {msg.content}
+        </p>
+    );
+
     return (
         <Virtuoso
             className={styles.container}
             style={{ width: "100%", height: `${props.height ?? 500}px` }}
             data={messages}
-            itemContent={(_index, msg) => (
-                <p>
-                    {msg.sender.username}: {msg.content}
-                </p>
-            )}
+            itemContent={renderItem}
         />
     );
 }

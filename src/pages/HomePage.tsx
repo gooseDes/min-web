@@ -89,9 +89,9 @@ function HomePage() {
             <div className={styles.rightPart}>
                 {openedChat && (
                     <motion.div
-                        initial={{ translateY: -100, opacity: 0 }}
-                        animate={{ translateY: 0, opacity: 1 }}
-                        exit={{ translateY: 100, opacity: 0 }}
+                        initial={{ translateY: -100 }}
+                        animate={{ translateY: 0 }}
+                        exit={{ translateY: 100 }}
                         className={styles.chatHeaderPanel}
                         layout
                     >
