@@ -19,6 +19,8 @@ declare const borderRadius: string;
 declare const borderWidth: string;
 declare const padding: string;
 declare const fontSizeBase: string;
+declare const fontSizeSmall: string;
+declare const fontSizeSmallest: string;
 declare const fontFamily: string;
 declare const shadow: string;
 declare const panel: string;
@@ -39,6 +41,8 @@ export {
 	borderWidth,
 	padding,
 	fontSizeBase,
+	fontSizeSmall,
+	fontSizeSmallest,
 	fontFamily,
 	shadow,
 	panel,
@@ -60,6 +64,8 @@ declare const __default_export__: {
 	borderWidth: typeof borderWidth;
 	padding: typeof padding;
 	fontSizeBase: typeof fontSizeBase;
+	fontSizeSmall: typeof fontSizeSmall;
+	fontSizeSmallest: typeof fontSizeSmallest;
 	fontFamily: typeof fontFamily;
 	shadow: typeof shadow;
 	panel: typeof panel;
@@ -67,4 +73,4 @@ declare const __default_export__: {
 	divider: typeof divider;
 };
 export default __default_export__;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Y0FFQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Q0FBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBQUE7OyJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRGl2aWRlci5tb2R1bGUuc2Nzcy5kLnRzIiwic291cmNlcyI6WyJEaXZpZGVyLm1vZHVsZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztjQUVBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBQUE7OyJ9

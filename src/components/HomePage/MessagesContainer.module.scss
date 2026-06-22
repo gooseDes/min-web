@@ -1,4 +1,25 @@
+@use "@/index.module.scss" as *;
+
 .container {
     background: none;
     scrollbar-width: thin;
+}
+
+.virtuosoScroll {
+    overflow-y: auto !important;
+    &::-webkit-scrollbar-track {
+        @include mobile {
+            margin: 60px 0;
+        }
+    }
+}
+
+.spacer {
+    margin: 0;
+    padding: -1px;
+    height: 1px;
+
+    @include mobile {
+        height: 60px;
+    }
 }

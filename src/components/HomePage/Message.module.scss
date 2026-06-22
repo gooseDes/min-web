@@ -1,0 +1,54 @@
+@use "@/index.module.scss" as *;
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: $padding * 0.5;
+}
+
+.message {
+    @extend .panel;
+
+    min-width: 100px;
+}
+
+.containerLeft {
+    align-items: flex-start;
+}
+
+.containerRight {
+    align-items: flex-end;
+}
+
+.left {
+    border-radius: 0 $border-radius $border-radius $border-radius;
+}
+
+.right {
+    border-radius: $border-radius 0 $border-radius $border-radius;
+}
+
+.senderName {
+    color: $secondary-color;
+    font-size: $font-size-small;
+    margin: 0;
+}
+
+.text {
+    font-size: $font-size-base;
+    margin: 0;
+}
+
+.sentAt {
+    @extend .senderName;
+
+    text-align: right;
+    font-size: $font-size-smallest;
+}
+
+.senderAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}

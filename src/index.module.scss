@@ -20,6 +20,8 @@ $border-radius: 16px;
 $border-width: 2px;
 $padding: 12px;
 $font-size-base: 16px;
+$font-size-small: 14px;
+$font-size-smallest: 12px;
 $font-family: "Rubik";
 
 :export {
@@ -36,14 +38,9 @@ $font-family: "Rubik";
     borderWidth: $border-width;
     padding: $padding;
     fontSizeBase: $font-size-base;
+    fontSizeSmall: $font-size-small;
+    fontSizeSmallest: $font-size-smallest;
     fontFamily: $font-family;
-}
-
-:root {
-    @include mobile {
-        --padding: $padding * 0.5;
-    }
-    --padding: $padding;
 }
 
 *,
@@ -74,7 +71,8 @@ h1 {
     margin: 8px;
 }
 
-p {
+p,
+div {
     font-family: $font-family;
     color: $primary-color;
     font-weight: 500;
