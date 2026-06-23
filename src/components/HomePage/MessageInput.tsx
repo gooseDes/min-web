@@ -2,7 +2,7 @@ import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { motion, type HTMLMotionProps } from "framer-motion";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import styles from "./MessageInput.module.scss";
 
 export interface MessageInputHandle {
@@ -14,7 +14,7 @@ export interface MessageInputProps extends HTMLMotionProps<"div"> {
     onSend?: (text: string) => void;
 }
 
-const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, ref) => {
+const MessageInput = memo(forwardRef<MessageInputHandle, MessageInputProps>((props, ref) => {
     const { onTextChanged, onSend, ...rest } = props;
 
     const [prefix, setPrefix] = useState<string>("");
@@ -32,38 +32,15 @@ const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, r
         onTextChanged?.(prefix + value);
     }, [prefix, value, onTextChanged]);
 
-    function onChangeText(text: string) {
+    const onChangeText = useCallback((text: string) => {
         setValue(text);
-    }
+    }, []);
 
-    function send() {
+    const send = useCallback(() => {
         onSend?.(prefix + value);
         setPrefix("");
         setValue("");
-    }
-
-    /*
-    async function attach() {
-        const result = await launchImageLibrary({ mediaType: "photo", selectionLimit: 1 });
-        if (result.didCancel) return;
-        if (!result.assets) return;
-        const asset = result.assets[0];
-        if (asset.uri && asset.fileName && asset.type) {
-            const response = await apiClient.attachImage(await Auth.getFromStorage("token"), {
-                uri: asset.uri,
-                name: asset.fileName,
-                type: asset.type,
-            });
-            if (response.success) {
-                setValue(
-                    value + value ? " " : "" + response.urls.map((att: string) => `![attachment](${SERVER}${att})`).join("\n"),
-                );
-            } else {
-                showPopup("Error", response.message);
-            }
-        }
-    }
-    */
+    }, [prefix, value, onSend]);
 
     return (
         <motion.div
@@ -106,6 +83,6 @@ const MessageInput = forwardRef<MessageInputHandle, MessageInputProps>((props, r
             </div>
         </motion.div>
     );
-});
+}));
 
 export default MessageInput;

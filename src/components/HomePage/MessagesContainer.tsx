@@ -1,6 +1,7 @@
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { MessageDataWithSender } from "@min/api-client";
 import { dateToString } from "@min/api-client/utils";
+import { motion } from "framer-motion";
 import { memo, useCallback, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 import Message from "./Message";
@@ -13,7 +14,6 @@ export interface MessagesContainerHandle {
 
 export interface MessagesContainerProps {
     ref?: Ref<MessagesContainerHandle>;
-    height?: number;
 }
 
 const MessagesContainer = memo(function MessagesContainer(props: MessagesContainerProps) {
@@ -37,11 +37,13 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
                 chatId: -1,
             };
             setMessages([fakeMsg, ...msgs, fakeMsg]);
-            virtuosoRef.current?.scrollToIndex({
-                index: "LAST",
-                align: "end",
-                behavior: "auto",
-            });
+            requestAnimationFrame(() =>
+                virtuosoRef.current?.scrollToIndex({
+                    index: "LAST",
+                    align: "start",
+                    behavior: "auto",
+                }),
+            );
         },
         show: () => {},
     }));
@@ -66,23 +68,29 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
     );
 
     return (
-        <Virtuoso
-            ref={virtuosoRef}
-            className={styles.container}
-            style={{ width: "100%", height: `${props.height ?? 500}px` }}
-            data={messages}
-            itemContent={renderItem}
-            alignToBottom={true}
-            followOutput="smooth"
-            initialTopMostItemIndex={messages.length - 1}
-            components={{
-                Scroller: ({ children, ...props }) => (
-                    <div {...props} className={styles.virtuosoScroll}>
-                        {children}
-                    </div>
-                ),
-            }}
-        />
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ width: "100%", height: "100%" }}
+        >
+            <Virtuoso
+                ref={virtuosoRef}
+                className={styles.container}
+                style={{ width: "100%", height: "100%" }}
+                data={messages}
+                itemContent={renderItem}
+                alignToBottom={true}
+                followOutput="smooth"
+                components={{
+                    Scroller: ({ children, ...props }) => (
+                        <div {...props} className={styles.virtuosoScroll}>
+                            {children}
+                        </div>
+                    ),
+                }}
+            />
+        </motion.div>
     );
 });
 

@@ -11,6 +11,8 @@
     @extend .panel;
 
     min-width: 100px;
+    max-width: 90%;
+    overflow: hidden;
 }
 
 .containerLeft {
@@ -36,6 +38,7 @@
 }
 
 .text {
+    overflow-wrap: break-word;
     font-size: $font-size-base;
     margin: 0;
 }

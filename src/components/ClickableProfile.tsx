@@ -1,4 +1,4 @@
-import { type HTMLProps } from "react";
+import { memo, type HTMLProps } from "react";
 import styles from "./ClickableProfile.module.scss";
 
 export interface ClickableProfileProps extends HTMLProps<HTMLDivElement> {
@@ -7,7 +7,7 @@ export interface ClickableProfileProps extends HTMLProps<HTMLDivElement> {
     isInList?: boolean;
 }
 
-function ClickableProfile(props: ClickableProfileProps) {
+const ClickableProfile = memo(function ClickableProfile(props: ClickableProfileProps) {
     const { text = "", image = "", className, isInList = false, children, ...rest } = props;
 
     const classes = [className || "", styles.container, isInList ? styles.listItem : ""].filter(Boolean).join(" ");
@@ -19,6 +19,6 @@ function ClickableProfile(props: ClickableProfileProps) {
             {children}
         </div>
     );
-}
+});
 
 export default ClickableProfile;

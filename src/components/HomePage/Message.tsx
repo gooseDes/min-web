@@ -25,7 +25,12 @@ const Message = memo(function Message(props: MessageProps) {
             style={{ padding: "8px", margin: 0 }}
             className={`${styles.container} ${side === "left" ? styles.containerLeft : styles.containerRight}`}
         >
-            {type === "header" && <img src={senderAvatar} alt="" className={styles.senderAvatar} />}
+            <img
+                src={senderAvatar}
+                alt=""
+                className={styles.senderAvatar}
+                style={{ display: type === "header" ? "none" : "block" }}
+            />
             <div className={`${styles.message} ${side === "left" ? styles.left : styles.right}`}>
                 <p className={styles.senderName}>{senderName}</p>
                 <p className={styles.text}>{text}</p>
