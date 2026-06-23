@@ -34,7 +34,8 @@ function HomePage() {
         setOpenedChat(chat);
         const messagesRes = await apiClient.fetchChatMessages({ chatId: chat.id });
         if (messagesRes.success) {
-            messagesContainerRef.current?.setMessages(messagesRes.messages);
+            await messagesContainerRef.current?.setMessages(messagesRes.messages);
+            await messagesContainerRef.current?.show();
         }
     }, []);
 

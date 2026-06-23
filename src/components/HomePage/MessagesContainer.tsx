@@ -3,13 +3,16 @@ import type { MessageDataWithSender } from "@min/api-client";
 import { dateToString } from "@min/api-client/utils";
 import { motion } from "framer-motion";
 import { memo, useCallback, useImperativeHandle, useRef, useState, type Ref } from "react";
-import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
+import { flushSync } from "react-dom";
+import { Virtuoso, type ListItem, type VirtuosoHandle } from "react-virtuoso";
 import Message from "./Message";
 import styles from "./MessagesContainer.module.scss";
 
+type ListMessageData = MessageDataWithSender & { shown: boolean; type: "header" | "regular" };
+
 export interface MessagesContainerHandle {
-    setMessages: (messages: MessageDataWithSender[]) => void;
-    show: () => void;
+    setMessages: (messages: MessageDataWithSender[]) => Promise<void>;
+    show: () => Promise<void>;
 }
 
 export interface MessagesContainerProps {
@@ -21,37 +24,61 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
 
     const [user] = useLocalStorage("user");
 
-    const [messages, setMessages] = useState<MessageDataWithSender[]>([]);
+    const [messages, setMessages] = useState<ListMessageData[]>([]);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
+    const resolveAnimationRef = useRef<(() => void) | null>(null);
+    const targetIndexRef = useRef<number>(0);
 
     useImperativeHandle(ref, () => ({
-        setMessages: (msgs: MessageDataWithSender[]) => {
-            const fakeMsg = {
-                id: -1,
-                sender: { id: -1, username: "", avatar: "" },
-                content: "",
-                senderId: -1,
-                seenAt: null,
-                sentAt: new Date(),
-                isSeen: false,
-                chatId: -1,
-            };
-            setMessages([fakeMsg, ...msgs, fakeMsg]);
-            requestAnimationFrame(() =>
-                virtuosoRef.current?.scrollToIndex({
-                    index: "LAST",
-                    align: "start",
-                    behavior: "auto",
-                }),
-            );
+        setMessages: async (msgs: MessageDataWithSender[]) => {
+            return new Promise(resolve => {
+                resolveAnimationRef.current = resolve;
+                targetIndexRef.current = msgs.length + 1; // +2 (because of fake messages) and -1
+
+                const fakeMsg: ListMessageData = {
+                    id: -1,
+                    sender: { id: -1, username: "", avatar: "" },
+                    content: "",
+                    senderId: -1,
+                    seenAt: null,
+                    sentAt: new Date(),
+                    isSeen: false,
+                    chatId: -1,
+                    shown: false,
+                    type: "regular",
+                };
+                const newMessages: ListMessageData[] = [];
+                newMessages.push(fakeMsg);
+                msgs.forEach((msg, index) => {
+                    let type: "header" | "regular";
+
+                    if (index === 0) type = "header";
+                    else type = msgs[index - 1].sender.id !== msg.sender.id ? "header" : "regular";
+
+                    newMessages.push({ shown: true, type: type, ...msg });
+                });
+                newMessages.push(fakeMsg);
+                flushSync(() => setMessages(newMessages));
+                virtuosoRef.current?.scrollToIndex({ index: "LAST", align: "end", behavior: "auto" });
+            });
         },
-        show: () => {},
+        show: async () => {
+            /*const newMessages = [...messages];
+            for (let i = newMessages.length - 1; i > 0; i--) {
+                setTimeout(() => {
+                    setMessages(prev => {
+                        const updated = [...prev];
+                        updated[i] = { ...updated[i], shown: true };
+                        return updated;
+                    });
+                }, i * 100);
+            }*/
+        },
     }));
 
     const renderItem = useCallback(
-        (index: number, msg: MessageDataWithSender) => {
+        (index: number, msg: ListMessageData) => {
             if (msg.id === -1) return <div key={`spacer-${index}`} className={styles.spacer} />;
-            const prevMessage = messages[index - 1];
             return (
                 <Message
                     key={msg.id}
@@ -60,12 +87,28 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
                     senderName={msg.sender.username === user.username ? "You" : msg.sender.username}
                     senderAvatar={`${import.meta.env.MIN_API_URL}/avatars/${msg.sender.avatar}.webp`}
                     sentAt={dateToString(msg.sentAt, "en-US", false)}
-                    type={prevMessage.sender.id === msg.sender.id ? "regular" : "header"}
+                    type={msg.type}
+                    className={`message-${msg.id}`}
+                    shown={msg.shown}
                 />
             );
         },
-        [messages, user],
+        [user],
     );
+
+    const handleItemsRendered = useCallback((items: ListItem<ListMessageData>[]) => {
+        if (items.length === 0) return;
+
+        const lastRenderedIndex = items[items.length - 1].index;
+        if (lastRenderedIndex >= targetIndexRef.current - 2) {
+            requestAnimationFrame(() => {
+                if (resolveAnimationRef.current) {
+                    resolveAnimationRef.current();
+                    resolveAnimationRef.current = null;
+                }
+            });
+        }
+    }, []);
 
     return (
         <motion.div
@@ -77,11 +120,13 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
             <Virtuoso
                 ref={virtuosoRef}
                 className={styles.container}
+                itemsRendered={handleItemsRendered}
                 style={{ width: "100%", height: "100%" }}
                 data={messages}
                 itemContent={renderItem}
                 alignToBottom={true}
-                followOutput="smooth"
+                followOutput={(atBottom: boolean) => (atBottom ? "smooth" : false)}
+                computeItemKey={(index, item) => (item.id === -1 ? index : item.id)}
                 components={{
                     Scroller: ({ children, ...props }) => (
                         <div {...props} className={styles.virtuosoScroll}>

@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { initSocket } from "./client";
 import MorphThing from "./components/MorphThing";
-import AuthPage from "./pages/AuthPage";
-import HomePage from "./pages/HomePage";
 import { morphThingRef } from "./services/morphService";
+
+const AuthPage = lazy(() => import("./pages/AuthPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
 
 function RootLayout() {
     return (

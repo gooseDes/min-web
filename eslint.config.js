@@ -30,6 +30,7 @@ export default defineConfig([
                     destructuredArrayIgnorePattern: "^_",
                 },
             ],
+            "@typescript-eslint/no-explicit-any": "off",
             "react-hooks/set-state-in-effect": "off",
         },
     },
