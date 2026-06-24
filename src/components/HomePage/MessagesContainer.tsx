@@ -11,8 +11,9 @@ import styles from "./MessagesContainer.module.scss";
 type ListMessageData = MessageDataWithSender & { shown: boolean; type: "header" | "regular" };
 
 export interface MessagesContainerHandle {
+    clearMessages: () => void;
     setMessages: (messages: MessageDataWithSender[]) => Promise<void>;
-    show: () => Promise<void>;
+    addMessage: (message: MessageDataWithSender) => void;
 }
 
 export interface MessagesContainerProps {
@@ -30,6 +31,9 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
     const targetIndexRef = useRef<number>(0);
 
     useImperativeHandle(ref, () => ({
+        clearMessages: () => {
+            setMessages([]);
+        },
         setMessages: async (msgs: MessageDataWithSender[]) => {
             return new Promise(resolve => {
                 resolveAnimationRef.current = resolve;
@@ -62,17 +66,8 @@ const MessagesContainer = memo(function MessagesContainer(props: MessagesContain
                 virtuosoRef.current?.scrollToIndex({ index: "LAST", align: "end", behavior: "auto" });
             });
         },
-        show: async () => {
-            /*const newMessages = [...messages];
-            for (let i = newMessages.length - 1; i > 0; i--) {
-                setTimeout(() => {
-                    setMessages(prev => {
-                        const updated = [...prev];
-                        updated[i] = { ...updated[i], shown: true };
-                        return updated;
-                    });
-                }, i * 100);
-            }*/
+        addMessage: (msg: MessageDataWithSender) => {
+            setMessages(prev => [...prev, { shown: true, type: "header", ...msg }]);
         },
     }));
 

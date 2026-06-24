@@ -19,6 +19,7 @@ function HomePage() {
 
     useEffect(() => {
         apiClient.fetchChats().then(res => {
+            console.log(res);
             if (res.success) {
                 chatsContainerRef.current?.setChats([
                     { id: 1, name: "Default Chat", type: "group", participants: [] },
@@ -27,15 +28,23 @@ function HomePage() {
                 chatsContainerRef.current?.show();
             }
         });
+
+        const messageSub = apiClient.subscribeToMessages(msg => {
+            messagesContainerRef.current?.addMessage(msg);
+        });
+
+        return () => {
+            messageSub.remove();
+        };
     }, []);
 
     const openChat = useCallback(async (chat: ChatData) => {
+        messagesContainerRef.current?.clearMessages();
         leftPartRef.current?.classList.add(styles.mobileHidden);
         setOpenedChat(chat);
         const messagesRes = await apiClient.fetchChatMessages({ chatId: chat.id });
         if (messagesRes.success) {
             await messagesContainerRef.current?.setMessages(messagesRes.messages);
-            await messagesContainerRef.current?.show();
         }
     }, []);
 

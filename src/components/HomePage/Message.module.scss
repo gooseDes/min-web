@@ -54,12 +54,12 @@
 
 .left {
     border-radius: 0 $border-radius $border-radius $border-radius;
-    animation: enterLeft 0.3s ease-out forwards;
+    animation: enterLeft 0.2s ease-out forwards;
 }
 
 .right {
     border-radius: $border-radius 0 $border-radius $border-radius;
-    animation: enterRight 0.3s ease-out forwards;
+    animation: enterRight 0.2s ease-out forwards;
 }
 
 .senderName {

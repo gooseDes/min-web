@@ -1,9 +1,10 @@
+import apiClient from "@/client";
 import ClickableProfile from "@components/ClickableProfile";
 import IconButton from "@components/IconButton";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import type { ChatData, UserData } from "@min/api-client";
 import { motion } from "framer-motion";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import MessageInput from "./MessageInput";
 import type { MessagesContainerHandle } from "./MessagesContainer";
 import MessagesContainer from "./MessagesContainer";
@@ -22,6 +23,11 @@ const RightPart = memo(function RightPart(props: RightPartProps) {
     const participant = useMemo(
         () => openedChat?.participants.find(participant => participant.id !== user.id),
         [openedChat, user.id],
+    );
+
+    const sendMessage = useCallback(
+        (text: string) => apiClient.sendMessage({ content: text, chatId: openedChat?.id || -1 }),
+        [openedChat],
     );
 
     return (
@@ -44,7 +50,7 @@ const RightPart = memo(function RightPart(props: RightPartProps) {
             <motion.div layout transition={{ layout: { type: "spring" } }} className={styles.contentPanel}>
                 {openedChat && <MessagesContainer ref={messagesContainerRef} />}
             </motion.div>
-            {openedChat && <MessageInput />}
+            {openedChat && <MessageInput onSend={sendMessage} />}
         </div>
     );
 });

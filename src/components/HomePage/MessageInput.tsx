@@ -1,21 +1,22 @@
 import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import { motion, type HTMLMotionProps } from "framer-motion";
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { motion } from "framer-motion";
+import { memo, useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import styles from "./MessageInput.module.scss";
 
 export interface MessageInputHandle {
     setMessagePrefix: (messagePrefix: string) => void;
 }
 
-export interface MessageInputProps extends HTMLMotionProps<"div"> {
+export interface MessageInputProps {
     onTextChanged?: (text: string) => void;
     onSend?: (text: string) => void;
+    ref?: Ref<MessageInputHandle>;
 }
 
-const MessageInput = memo(forwardRef<MessageInputHandle, MessageInputProps>((props, ref) => {
-    const { onTextChanged, onSend, ...rest } = props;
+const MessageInput = memo(function MessageInput(props: MessageInputProps) {
+    const { ref, onTextChanged, onSend, ...rest } = props;
 
     const [prefix, setPrefix] = useState<string>("");
     const [value, setValue] = useState<string>("");
@@ -83,6 +84,6 @@ const MessageInput = memo(forwardRef<MessageInputHandle, MessageInputProps>((pro
             </div>
         </motion.div>
     );
-}));
+});
 
 export default MessageInput;

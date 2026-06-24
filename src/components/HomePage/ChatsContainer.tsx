@@ -1,3 +1,4 @@
+import useLocalStorage from "@hooks/useLocalStorage";
 import type { ChatData } from "@min/api-client";
 import { stagger, useAnimate } from "framer-motion";
 import { useImperativeHandle, useState, type MouseEvent, type Ref } from "react";
@@ -17,6 +18,7 @@ export interface ChatsContainerProps {
 
 function ChatsContainer(props: ChatsContainerProps) {
     const [scope, animate] = useAnimate();
+    const [user] = useLocalStorage("user");
     const [chats, setChats] = useState<ChatData[]>([]);
     const { ref, onClick } = props;
 
@@ -43,7 +45,7 @@ function ChatsContainer(props: ChatsContainerProps) {
                     className="chatItem"
                     style={{ opacity: 0 }}
                     image={`${import.meta.env.MIN_API_URL}/avatars/${
-                        chat.participants?.find(participant => (participant?.id || -1) !== 1)?.avatar || "default"
+                        chat.participants?.find(participant => (participant?.id || -1) !== user.id)?.avatar || "default"
                     }.webp`}
                     text={chat.name}
                     isInList={true}
