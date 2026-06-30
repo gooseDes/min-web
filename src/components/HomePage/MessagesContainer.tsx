@@ -13,6 +13,7 @@ export interface MessagesContainerHandle {
     clearMessages: () => void;
     setMessages: (messages: MessageDataWithSender[]) => Promise<void>;
     addMessage: (message: MessageDataWithSender) => void;
+    removeMessage: (messageId: number) => void;
 }
 
 export interface MessagesContainerProps {
@@ -27,6 +28,16 @@ function MessagesContainer(props: MessagesContainerProps) {
     const [messages, setMessages] = useState<ListMessageData[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [animationProgress, setAnimationProgress] = useState<number>(0);
+
+    function isAtBottom() {
+        if (!containerRef.current) return false;
+
+        return (
+            Math.abs(
+                containerRef.current?.scrollHeight - containerRef.current?.scrollTop - containerRef.current?.clientHeight,
+            ) < 200
+        );
+    }
 
     useImperativeHandle(ref, () => ({
         clearMessages: () => {
@@ -53,11 +64,15 @@ function MessagesContainer(props: MessagesContainerProps) {
         },
         addMessage: (msg: MessageDataWithSender) => {
             if (!containerRef.current) return;
-            const isAtBottom =
-                containerRef.current.scrollHeight - containerRef.current.scrollTop === containerRef.current.clientHeight;
             flushSync(() => setMessages(prev => [...prev, { shown: true, type: "header", ...msg }]));
-            if (isAtBottom) {
+            if (isAtBottom()) {
                 containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
+            }
+        },
+        removeMessage: (msgId: number) => {
+            flushSync(() => setMessages(prev => prev.filter(m => m.id !== msgId)));
+            if (isAtBottom()) {
+                containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
             }
         },
     }));

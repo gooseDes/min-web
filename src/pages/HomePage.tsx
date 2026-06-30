@@ -32,8 +32,13 @@ function HomePage() {
             messagesContainerRef.current?.addMessage(msg);
         });
 
+        const deleteSub = apiClient.subscribeToDeletingMessages(msgId => {
+            messagesContainerRef.current?.removeMessage(msgId);
+        });
+
         return () => {
             messageSub.remove();
+            deleteSub.remove();
         };
     }, []);
 
