@@ -52,7 +52,7 @@ const Message = memo(function Message(props: MessageProps) {
 
     return (
         <motion.div
-            style={{ padding: "8px", margin: 0, opacity }}
+            style={{ opacity }}
             className={`${styles.container} ${side === "left" ? styles.containerLeft : styles.containerRight} ${className}`}
         >
             <img
