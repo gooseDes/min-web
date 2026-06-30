@@ -11,6 +11,10 @@
     flex-direction: column;
     min-height: 0;
     padding: $padding 0;
+
+    @include mobile {
+        padding: 60px 0;
+    }
 }
 
 .container > * {
