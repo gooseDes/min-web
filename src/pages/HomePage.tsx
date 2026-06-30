@@ -19,7 +19,6 @@ function HomePage() {
 
     useEffect(() => {
         apiClient.fetchChats().then(res => {
-            console.log(res);
             if (res.success) {
                 chatsContainerRef.current?.setChats([
                     { id: 1, name: "Default Chat", type: "group", participants: [] },

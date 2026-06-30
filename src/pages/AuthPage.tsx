@@ -2,6 +2,7 @@ import apiClient, { initSocket } from "@/client";
 import Divider from "@components/Divider";
 import FlatSelector from "@components/FlatSelector";
 import useLocalStorage from "@hooks/useLocalStorage";
+import { useTranslation } from "@hooks/useTranslation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,7 @@ import styles from "./AuthPage.module.scss";
 function AuthPage() {
     const [, setUser] = useLocalStorage("user");
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -66,8 +68,8 @@ function AuthPage() {
                 <h1>Welcome!</h1>
                 <Divider />
                 <FlatSelector
-                    options={["Sign In", "Sign Up"]}
-                    onSelect={option => setMode(option === "Sign In" ? "signin" : "signup")}
+                    options={[t.sign_in ?? "Sign In", t.sign_up ?? "Sign Up"]}
+                    onSelect={option => setMode(option === (t.sign_in ?? "Sign In") ? "signin" : "signup")}
                 />
                 <div className={styles.form}>
                     <AnimatePresence>
@@ -80,7 +82,7 @@ function AuthPage() {
                                 type="text"
                                 name="username"
                                 key="username_input"
-                                placeholder="Username"
+                                placeholder={t.login}
                                 ref={usernameInputRef}
                             />
                         )}
@@ -92,7 +94,7 @@ function AuthPage() {
                             type="text"
                             name="email"
                             key="email_input"
-                            placeholder="Email"
+                            placeholder={t.email}
                             ref={emailInputRef}
                         />
                         <motion.input
@@ -103,7 +105,7 @@ function AuthPage() {
                             type="password"
                             name="password"
                             key="password_input"
-                            placeholder="Password"
+                            placeholder={t.password}
                             ref={passwordInputRef}
                         />
                         {mode === "signup" && (
@@ -115,7 +117,7 @@ function AuthPage() {
                                 type="password"
                                 name="confirmPassword"
                                 key="confirm_password_input"
-                                placeholder="Confirm Password"
+                                placeholder={t.confirm_password}
                                 ref={confirmPasswordInputRef}
                             />
                         )}
@@ -136,7 +138,7 @@ function AuthPage() {
                                 layout
                                 style={{ margin: 0 }}
                             >
-                                {mode === "signup" ? "Sign Up" : "Sign In"}
+                                {mode === "signup" ? t.sign_up : t.sign_in}
                             </motion.p>
                         </motion.button>
                     </AnimatePresence>

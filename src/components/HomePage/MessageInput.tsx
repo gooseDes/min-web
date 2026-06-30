@@ -1,6 +1,7 @@
 import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "@hooks/useTranslation";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import styles from "./MessageInput.module.scss";
@@ -17,6 +18,8 @@ export interface MessageInputProps {
 
 function MessageInput(props: MessageInputProps) {
     const { ref, onTextChanged, onSend, ...rest } = props;
+
+    const { t } = useTranslation();
 
     const [prefix, setPrefix] = useState<string>("");
     const [value, setValue] = useState<string>("");
@@ -76,7 +79,7 @@ function MessageInput(props: MessageInputProps) {
                 <IconButton className={styles.button} icon={faPaperclip} size={24} />
                 <input
                     className={styles.input}
-                    placeholder="Your message..."
+                    placeholder={t.your_message}
                     onChange={e => onChangeText(e.target.value)}
                     value={value}
                 />

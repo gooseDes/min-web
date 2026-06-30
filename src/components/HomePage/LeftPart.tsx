@@ -3,9 +3,9 @@ import Divider from "@components/Divider";
 import Icon from "@components/Icon";
 import IconButton from "@components/IconButton";
 import { faComments } from "@fortawesome/free-regular-svg-icons/faComments";
-import { faSignIn } from "@fortawesome/free-solid-svg-icons";
+import { faEarthAmericas, faSignIn } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "@hooks/useTranslation";
 import type { ChatData, UserData } from "@min/api-client";
-import { useCallback } from "react";
 import type { NavigateFunction } from "react-router-dom";
 import type { ChatsContainerHandle } from "./ChatsContainer";
 import ChatsContainer from "./ChatsContainer";
@@ -22,16 +22,14 @@ export interface LeftPartProps {
 function LeftPart(props: LeftPartProps) {
     const { user, navigate, onChatClick, chatsContainerRef, leftPartRef } = props;
 
-    const handleAuthClick = useCallback(() => {
-        navigate("/auth", { viewTransition: true });
-    }, [navigate]);
+    const { t, changeLanguage } = useTranslation();
 
     return (
         <div ref={leftPartRef} className={styles.leftPart}>
             <div className={styles.chatsPanel}>
                 <div className={styles.header}>
                     <Icon icon={faComments} size={24} />
-                    <h1>Chats</h1>
+                    <h1>{t.chats}</h1>
                 </div>
                 <Divider />
                 <ChatsContainer onClick={onChatClick} ref={chatsContainerRef} />
@@ -42,7 +40,13 @@ function LeftPart(props: LeftPartProps) {
                     image={`${import.meta.env.MIN_API_URL}/avatars/${user.avatar}.webp`}
                     text={user.username}
                 />
-                <IconButton onClick={handleAuthClick} className={styles.iconButton} icon={faSignIn} size={24} />
+                <IconButton onClick={() => changeLanguage()} className={styles.iconButton} icon={faEarthAmericas} size={24} />
+                <IconButton
+                    onClick={() => navigate("/auth", { viewTransition: true })}
+                    className={styles.iconButton}
+                    icon={faSignIn}
+                    size={24}
+                />
             </div>
         </div>
     );
