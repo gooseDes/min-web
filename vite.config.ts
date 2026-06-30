@@ -1,4 +1,5 @@
-import react from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
@@ -7,6 +8,10 @@ export default defineConfig({
     envPrefix: ["VITE_", "MIN_"],
     plugins: [
         react(),
+        babel({
+            presets: [reactCompilerPreset({ target: "19" })],
+            include: [/\.(ts|tsx|js|jsx)$/],
+        }),
         patchCssModules({
             generateSourceTypes: true,
             declarationMap: true,

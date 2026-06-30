@@ -1,6 +1,6 @@
 import vars from "@/index.module.scss";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./FlatSelector.module.scss";
 
 export interface FlatSelectorProps {
@@ -13,10 +13,24 @@ function FlatSelector(props: FlatSelectorProps) {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const { options, onSelect } = props;
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        const rect = document.querySelector(`.${styles.option}:nth-child(${selectedIndex + 1})`)?.getBoundingClientRect();
-        if (rect) setSelectIndicatorPos({ x: rect.left - 4, y: rect.top - 4, width: rect.width + 8, height: rect.height + 8 });
-    }, [selectedIndex]);
+        if (!containerRef.current) return;
+
+        const activeElement = containerRef.current.querySelector(`[data-index="${selectedIndex}"]`) as HTMLElement | null;
+
+        if (activeElement) {
+            const rect = activeElement.getBoundingClientRect();
+
+            setSelectIndicatorPos({
+                x: rect.left - 4,
+                y: rect.top - 4,
+                width: rect.width + 8,
+                height: rect.height + 8,
+            });
+        }
+    }, [selectedIndex, options]);
 
     function handleOptionClick(option: string, index: number) {
         setSelectedIndex(index);
@@ -24,7 +38,7 @@ function FlatSelector(props: FlatSelectorProps) {
     }
 
     return (
-        <div className={styles.container}>
+        <div ref={containerRef} className={styles.container}>
             {options.map((option, index) => (
                 <motion.p
                     animate={{ color: index === selectedIndex ? vars.primaryColor : vars.secondaryColor }}

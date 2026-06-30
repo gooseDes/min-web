@@ -1,39 +1,11 @@
 @use "@/index.module.scss" as *;
 
-@keyframes unfade {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 .container {
     display: flex;
     justify-content: center;
     flex-direction: column;
     gap: $padding * 0.5;
     opacity: 0;
-    animation: unfade 0.3s ease-in-out forwards;
-}
-
-@keyframes enterLeft {
-    from {
-        translate: -100% 0;
-    }
-    to {
-        translate: 0 0;
-    }
-}
-
-@keyframes enterRight {
-    from {
-        translate: 100% 0;
-    }
-    to {
-        translate: 0 0;
-    }
 }
 
 .message {
@@ -54,12 +26,10 @@
 
 .left {
     border-radius: 0 $border-radius $border-radius $border-radius;
-    animation: enterLeft 0.2s ease-out forwards;
 }
 
 .right {
     border-radius: $border-radius 0 $border-radius $border-radius;
-    animation: enterRight 0.2s ease-out forwards;
 }
 
 .senderName {

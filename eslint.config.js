@@ -31,7 +31,6 @@ export default defineConfig([
                 },
             ],
             "@typescript-eslint/no-explicit-any": "off",
-            "react-hooks/set-state-in-effect": "off",
         },
     },
 ]);

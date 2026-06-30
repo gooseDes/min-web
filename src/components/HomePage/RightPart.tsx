@@ -4,7 +4,7 @@ import IconButton from "@components/IconButton";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import type { ChatData, UserData } from "@min/api-client";
 import { motion } from "framer-motion";
-import { memo, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import MessageInput from "./MessageInput";
 import type { MessagesContainerHandle } from "./MessagesContainer";
 import MessagesContainer from "./MessagesContainer";
@@ -17,7 +17,7 @@ export interface RightPartProps {
     messagesContainerRef: React.RefObject<MessagesContainerHandle | null>;
 }
 
-const RightPart = memo(function RightPart(props: RightPartProps) {
+function RightPart(props: RightPartProps) {
     const { openedChat, user, closeChat, messagesContainerRef } = props;
 
     const participant = useMemo(
@@ -53,6 +53,6 @@ const RightPart = memo(function RightPart(props: RightPartProps) {
             {openedChat && <MessageInput onSend={sendMessage} />}
         </div>
     );
-});
+}
 
 export default RightPart;

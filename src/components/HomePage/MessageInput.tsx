@@ -2,7 +2,7 @@ import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
-import { memo, useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
+import { useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import styles from "./MessageInput.module.scss";
 
 export interface MessageInputHandle {
@@ -15,7 +15,7 @@ export interface MessageInputProps {
     ref?: Ref<MessageInputHandle>;
 }
 
-const MessageInput = memo(function MessageInput(props: MessageInputProps) {
+function MessageInput(props: MessageInputProps) {
     const { ref, onTextChanged, onSend, ...rest } = props;
 
     const [prefix, setPrefix] = useState<string>("");
@@ -84,6 +84,6 @@ const MessageInput = memo(function MessageInput(props: MessageInputProps) {
             </div>
         </motion.div>
     );
-});
+}
 
 export default MessageInput;

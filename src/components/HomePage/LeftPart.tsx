@@ -5,7 +5,7 @@ import IconButton from "@components/IconButton";
 import { faComments } from "@fortawesome/free-regular-svg-icons/faComments";
 import { faSignIn } from "@fortawesome/free-solid-svg-icons";
 import type { ChatData, UserData } from "@min/api-client";
-import { memo, useCallback } from "react";
+import { useCallback } from "react";
 import type { NavigateFunction } from "react-router-dom";
 import type { ChatsContainerHandle } from "./ChatsContainer";
 import ChatsContainer from "./ChatsContainer";
@@ -19,7 +19,7 @@ export interface LeftPartProps {
     leftPartRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const LeftPart = memo(function LeftPart(props: LeftPartProps) {
+function LeftPart(props: LeftPartProps) {
     const { user, navigate, onChatClick, chatsContainerRef, leftPartRef } = props;
 
     const handleAuthClick = useCallback(() => {
@@ -46,6 +46,6 @@ const LeftPart = memo(function LeftPart(props: LeftPartProps) {
             </div>
         </div>
     );
-});
+}
 
 export default LeftPart;
