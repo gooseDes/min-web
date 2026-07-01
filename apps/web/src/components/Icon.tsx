@@ -1,4 +1,3 @@
-import vars from "@/index.module.scss";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type HTMLProps } from "react";
@@ -14,7 +13,7 @@ function Icon(props: IconProps) {
 
     return (
         <div className={[className, styles.container].filter(Boolean).join(" ")} {...rest}>
-            <FontAwesomeIcon icon={icon} fontSize={size} color={vars.primaryColor} />
+            <FontAwesomeIcon icon={icon} fontSize={size} />
         </div>
     );
 }

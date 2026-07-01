@@ -34,6 +34,14 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    color: $secondary-color;
+    transition:
+        color 0.25s ease,
+        background-color 0.25s ease;
+
+    &:hover {
+        color: $primary-color;
+    }
 }
 
 .horizontalRow {

@@ -10,10 +10,10 @@
     box-shadow: none;
     margin: 0;
     padding: 0;
+    color: $primary-color;
     transition: background-color 0.2s ease;
 
     &:hover {
-        scale: 1;
         background-color: $ripple-color;
     }
 }
