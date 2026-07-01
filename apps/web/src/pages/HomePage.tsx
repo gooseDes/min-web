@@ -4,14 +4,14 @@ import LeftPart from "@components/HomePage/LeftPart";
 import { type MessagesContainerHandle } from "@components/HomePage/MessagesContainer";
 import RightPart from "@components/HomePage/RightPart";
 import useLocalStorage from "@hooks/useLocalStorage";
+import useNavigation from "@hooks/useNavigation";
 import type { ChatData } from "@min/api-client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./HomePage.module.scss";
 
 function HomePage() {
     const [user] = useLocalStorage("user");
-    const navigate = useNavigate();
+    const navigate = useNavigation();
     const chatsContainerRef = useRef<ChatsContainerHandle>(null);
     const messagesContainerRef = useRef<MessagesContainerHandle>(null);
     const leftPartRef = useRef<HTMLDivElement>(null);

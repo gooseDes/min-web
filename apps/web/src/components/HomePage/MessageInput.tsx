@@ -1,7 +1,7 @@
 import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import { useTranslation } from "@hooks/useTranslation";
+import useTranslation from "@hooks/useTranslation";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import styles from "./MessageInput.module.scss";

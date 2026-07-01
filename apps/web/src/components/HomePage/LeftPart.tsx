@@ -4,16 +4,16 @@ import Icon from "@components/Icon";
 import IconButton from "@components/IconButton";
 import { faComments } from "@fortawesome/free-regular-svg-icons/faComments";
 import { faEarthAmericas, faSignIn } from "@fortawesome/free-solid-svg-icons";
-import { useTranslation } from "@hooks/useTranslation";
+import type { NavigateFunctionMin } from "@hooks/useNavigation";
+import useTranslation from "@hooks/useTranslation";
 import type { ChatData, UserData } from "@min/api-client";
-import type { NavigateFunction } from "react-router-dom";
 import type { ChatsContainerHandle } from "./ChatsContainer";
 import ChatsContainer from "./ChatsContainer";
 import styles from "./LeftPart.module.scss";
 
 export interface LeftPartProps {
     user: UserData;
-    navigate: NavigateFunction;
+    navigate: NavigateFunctionMin;
     onChatClick: (chat: ChatData) => void;
     chatsContainerRef: React.RefObject<ChatsContainerHandle | null>;
     leftPartRef: React.RefObject<HTMLDivElement | null>;
@@ -41,12 +41,7 @@ function LeftPart(props: LeftPartProps) {
                     text={user.username}
                 />
                 <IconButton onClick={() => changeLanguage()} className={styles.iconButton} icon={faEarthAmericas} size={24} />
-                <IconButton
-                    onClick={() => navigate("/auth", { viewTransition: true })}
-                    className={styles.iconButton}
-                    icon={faSignIn}
-                    size={24}
-                />
+                <IconButton onClick={() => navigate("auth")} className={styles.iconButton} icon={faSignIn} size={24} />
             </div>
         </div>
     );

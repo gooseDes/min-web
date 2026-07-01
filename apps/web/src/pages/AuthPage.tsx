@@ -2,15 +2,15 @@ import apiClient, { initSocket } from "@/client";
 import Divider from "@components/Divider";
 import FlatSelector from "@components/FlatSelector";
 import useLocalStorage from "@hooks/useLocalStorage";
-import { useTranslation } from "@hooks/useTranslation";
+import useNavigateMin from "@hooks/useNavigation";
+import useTranslation from "@hooks/useTranslation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./AuthPage.module.scss";
 
 function AuthPage() {
     const [, setUser] = useLocalStorage("user");
-    const navigate = useNavigate();
+    const navigate = useNavigateMin();
     const { t } = useTranslation();
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +28,7 @@ function AuthPage() {
             initSocket();
             const user = await apiClient.fetchUser({ userId: res.user.id });
             if (user.success) setUser(user.user);
-            await navigate("/", { viewTransition: true });
+            await navigate("/");
         } else {
             alert(res.message);
         }
@@ -56,7 +56,7 @@ function AuthPage() {
             initSocket();
             const user = await apiClient.fetchUser({ userId: res.user.id });
             if (user.success) setUser(user.user);
-            await navigate("/", { viewTransition: true });
+            await navigate("/");
         } else {
             alert(res.message);
         }

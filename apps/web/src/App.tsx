@@ -1,11 +1,12 @@
 import { TranslationProvider } from "@contexts/TranslationProvider";
-import { useTranslation } from "@hooks/useTranslation";
+import useTranslation from "@hooks/useTranslation";
 import { lazy, useEffect } from "react";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { initSocket } from "./client";
 import MorphThing from "./components/MorphThing";
 import { morphThingRef } from "./services/morphService";
 import Translation from "./translation";
+import { isTauri } from "./utils";
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -18,7 +19,7 @@ function RootLayout() {
         Translation.init();
         changeLanguage(Translation.lang);
 
-        if ("serviceWorker" in navigator) {
+        if (!isTauri() && "serviceWorker" in navigator) {
             const registerSW = () => {
                 navigator.serviceWorker
                     .register("/sw.js")
@@ -45,7 +46,10 @@ function RootLayout() {
     );
 }
 
-const router = createBrowserRouter([
+const createRouter = isTauri() ? createHashRouter : createBrowserRouter;
+console.log("isTauri", isTauri(), "createRouter", createRouter);
+
+const router = createRouter([
     {
         path: "/",
         element: <RootLayout />,
