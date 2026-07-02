@@ -43,11 +43,12 @@ function HomePage() {
     }, []);
 
     const openChat = useCallback(async (chat: ChatData) => {
-        messagesContainerRef.current?.clearMessages();
+        const clearPromise = messagesContainerRef.current?.clearMessages();
         leftPartRef.current?.classList.add(styles.mobileHidden);
         setOpenedChat(chat);
         const messagesRes = await apiClient.fetchChatMessages({ chatId: chat.id });
         if (messagesRes.success) {
+            await clearPromise;
             await messagesContainerRef.current?.setMessages(messagesRes.messages);
         }
     }, []);

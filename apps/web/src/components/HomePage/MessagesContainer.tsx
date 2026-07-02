@@ -10,7 +10,7 @@ import styles from "./MessagesContainer.module.scss";
 type ListMessageData = MessageDataWithSender & { shown: boolean; type: "header" | "regular" };
 
 export interface MessagesContainerHandle {
-    clearMessages: () => void;
+    clearMessages: () => Promise<void>;
     setMessages: (messages: MessageDataWithSender[]) => Promise<void>;
     addMessage: (message: MessageDataWithSender) => void;
     removeMessage: (messageId: number) => void;
@@ -28,6 +28,7 @@ function MessagesContainer(props: MessagesContainerProps) {
     const [messages, setMessages] = useState<ListMessageData[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [animationProgress, setAnimationProgress] = useState<number>(0);
+    const [showMessages, setShowMessages] = useState<boolean>(false);
 
     function isAtBottom() {
         if (!containerRef.current) return false;
@@ -41,10 +42,18 @@ function MessagesContainer(props: MessagesContainerProps) {
 
     useImperativeHandle(ref, () => ({
         clearMessages: () => {
-            setMessages([]);
-            setAnimationProgress(0);
+            return new Promise(resolve => {
+                setShowMessages(false);
+                setAnimationProgress(0);
+
+                setTimeout(() => {
+                    setMessages([]);
+                    resolve();
+                }, 100);
+            });
         },
         setMessages: async (msgs: MessageDataWithSender[]) => {
+            setShowMessages(true);
             const newMessages: ListMessageData[] = [];
             msgs.forEach((msg, index) => {
                 let type: "header" | "regular";
@@ -102,7 +111,7 @@ function MessagesContainer(props: MessagesContainerProps) {
                         sentAt={dateToString(msg.sentAt, "en-US", false)}
                         type={msg.type}
                         className={`message-${msg.id}`}
-                        shown={animationProgress > indexFromBottom || indexFromBottom >= 15}
+                        shown={showMessages && (animationProgress > indexFromBottom || indexFromBottom >= 15)}
                     />
                 );
             })}
