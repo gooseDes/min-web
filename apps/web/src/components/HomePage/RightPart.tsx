@@ -47,7 +47,7 @@ function RightPart(props: RightPartProps) {
                     />
                 </motion.div>
             )}
-            <motion.div layout transition={{ layout: { type: "spring" } }} className={styles.contentPanel}>
+            <motion.div layout className={styles.contentPanel}>
                 {openedChat && <MessagesContainer ref={messagesContainerRef} />}
             </motion.div>
             {openedChat && <MessageInput onSend={sendMessage} />}

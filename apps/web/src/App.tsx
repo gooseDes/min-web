@@ -1,9 +1,13 @@
+import CreateChatPopup from "@components/HomePage/CreateChatPopup";
 import { TranslationProvider } from "@contexts/TranslationProvider";
 import useTranslation from "@hooks/useTranslation";
-import { lazy, useEffect } from "react";
+import { rootLayoutRef } from "@services/appControlService";
+import { createChatPopupRef } from "@services/popupService";
+import { lazy, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import { createBrowserRouter, createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { initSocket } from "./client";
 import MorphThing from "./components/MorphThing";
+import styles from "./index.module.scss";
 import { morphThingRef } from "./services/morphService";
 import Translation from "./translation";
 import { isTauri } from "./utils";
@@ -11,8 +15,23 @@ import { isTauri } from "./utils";
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 
-function RootLayout() {
+export interface RootLayoutHandle {
+    setIsBlurred: (isBlurred: boolean) => void;
+}
+
+export interface RootLayoutProps {
+    ref: Ref<RootLayoutHandle>;
+}
+
+function RootLayout(props: RootLayoutProps) {
+    const { ref } = props;
+
     const { changeLanguage } = useTranslation();
+    const [isBlurred, setIsBlurred] = useState<boolean>(false);
+
+    useImperativeHandle(ref, () => ({
+        setIsBlurred: (isBlurred: boolean) => setIsBlurred(isBlurred),
+    }));
 
     useEffect(() => {
         initSocket();
@@ -38,8 +57,11 @@ function RootLayout() {
 
     return (
         <div className="app-container">
-            <main className="content">
-                <Outlet />
+            <main className={styles.content}>
+                <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`}>
+                    <Outlet />
+                </div>
+                <CreateChatPopup ref={createChatPopupRef} />
                 <MorphThing ref={morphThingRef} />
             </main>
         </div>
@@ -51,7 +73,7 @@ const createRouter = isTauri() ? createHashRouter : createBrowserRouter;
 const router = createRouter([
     {
         path: "/",
-        element: <RootLayout />,
+        element: <RootLayout ref={rootLayoutRef} />,
         children: [
             { index: true, element: <HomePage /> },
             { path: "auth", element: <AuthPage /> },

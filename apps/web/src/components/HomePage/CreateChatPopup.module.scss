@@ -1,0 +1,57 @@
+@use "@/index.module.scss" as *;
+
+.container {
+    @extend .panel;
+
+    position: absolute;
+    align-self: center;
+    top: calc(50% - 300px);
+    width: 800px;
+    height: 600px;
+    max-width: calc(100% - $padding);
+    max-height: calc(100% - $padding);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+    gap: $padding;
+
+    p {
+        margin: 0;
+        font-weight: normal;
+    }
+}
+
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: $padding;
+    height: 50px;
+
+    input {
+        height: 100%;
+        width: 100%;
+    }
+
+    button {
+        height: 50px;
+        width: 50px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

@@ -7,20 +7,20 @@ import { faEarthAmericas, faSignIn } from "@fortawesome/free-solid-svg-icons";
 import type { NavigateFunctionMin } from "@hooks/useNavigation";
 import useTranslation from "@hooks/useTranslation";
 import type { ChatData, UserData } from "@min/api-client";
-import type { ChatsContainerHandle } from "./ChatsContainer";
+import { chatsContainerRef } from "@services/appControlService";
 import ChatsContainer from "./ChatsContainer";
+import CreateChatButton from "./CreateChatButton";
 import styles from "./LeftPart.module.scss";
 
 export interface LeftPartProps {
     user: UserData;
     navigate: NavigateFunctionMin;
     onChatClick: (chat: ChatData) => void;
-    chatsContainerRef: React.RefObject<ChatsContainerHandle | null>;
     leftPartRef: React.RefObject<HTMLDivElement | null>;
 }
 
 function LeftPart(props: LeftPartProps) {
-    const { user, navigate, onChatClick, chatsContainerRef, leftPartRef } = props;
+    const { user, navigate, onChatClick, leftPartRef } = props;
 
     const { t, changeLanguage } = useTranslation();
 
@@ -33,6 +33,7 @@ function LeftPart(props: LeftPartProps) {
                 </div>
                 <Divider />
                 <ChatsContainer onClick={onChatClick} ref={chatsContainerRef} />
+                <CreateChatButton />
             </div>
             <div className={styles.userPanel}>
                 <ClickableProfile

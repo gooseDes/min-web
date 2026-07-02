@@ -1,18 +1,17 @@
 import apiClient from "@/client";
-import { type ChatsContainerHandle } from "@components/HomePage/ChatsContainer";
 import LeftPart from "@components/HomePage/LeftPart";
 import { type MessagesContainerHandle } from "@components/HomePage/MessagesContainer";
 import RightPart from "@components/HomePage/RightPart";
 import useLocalStorage from "@hooks/useLocalStorage";
 import useNavigation from "@hooks/useNavigation";
 import type { ChatData } from "@min/api-client";
+import { setChatsInContainer } from "@services/appControlService";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./HomePage.module.scss";
 
 function HomePage() {
     const [user] = useLocalStorage("user");
     const navigate = useNavigation();
-    const chatsContainerRef = useRef<ChatsContainerHandle>(null);
     const messagesContainerRef = useRef<MessagesContainerHandle>(null);
     const leftPartRef = useRef<HTMLDivElement>(null);
     const [openedChat, setOpenedChat] = useState<ChatData | null>(null);
@@ -20,11 +19,7 @@ function HomePage() {
     useEffect(() => {
         apiClient.fetchChats().then(res => {
             if (res.success) {
-                chatsContainerRef.current?.setChats([
-                    { id: 1, name: "Default Chat", type: "group", participants: [] },
-                    ...res.chats,
-                ]);
-                chatsContainerRef.current?.show();
+                setChatsInContainer([{ id: 1, name: "Default Chat", type: "group", participants: [] }, ...res.chats]);
             }
         });
 
@@ -60,13 +55,7 @@ function HomePage() {
 
     return (
         <div className={styles.main}>
-            <LeftPart
-                user={user}
-                navigate={navigate}
-                onChatClick={openChat}
-                chatsContainerRef={chatsContainerRef}
-                leftPartRef={leftPartRef}
-            />
+            <LeftPart user={user} navigate={navigate} onChatClick={openChat} leftPartRef={leftPartRef} />
             <RightPart openedChat={openedChat} user={user} closeChat={closeChat} messagesContainerRef={messagesContainerRef} />
         </div>
     );

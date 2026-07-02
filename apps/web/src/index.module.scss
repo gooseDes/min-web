@@ -78,6 +78,21 @@ div {
     font-weight: 500;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.blurrable {
+    filter: blur(0);
+    transition: filter 0.3s ease-in-out;
+}
+
+.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+}
+
 input {
     @extend .shadow;
 
@@ -88,6 +103,11 @@ input {
     background-color: $panel-bg-color;
     color: $primary-color;
     font-size: $font-size-base;
+    height: 50px;
+
+    &:focus {
+        outline: none;
+    }
 }
 
 button {
@@ -102,13 +122,9 @@ button {
     font-size: $font-size-base;
     will-change: transform;
     text-rendering: geometricPrecision;
-    transition:
-        filter 0.2s,
-        scale 0.2s;
 
-    &:hover {
-        filter: brightness(1.2);
-        scale: 1.1;
+    &:focus {
+        outline: none;
     }
 }
 

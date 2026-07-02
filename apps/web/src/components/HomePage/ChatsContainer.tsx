@@ -7,8 +7,8 @@ import ClickableProfile from "../ClickableProfile";
 import styles from "./ChatsContainer.module.scss";
 
 export interface ChatsContainerHandle {
-    setChats: (chats: ChatData[]) => void;
-    show: () => Promise<void>;
+    setChats: (chats: ChatData[]) => Promise<void>;
+    addChat: (chat: ChatData) => Promise<void>;
 }
 
 export interface ChatsContainerProps {
@@ -23,17 +23,21 @@ function ChatsContainer(props: ChatsContainerProps) {
     const { ref, onClick } = props;
 
     useImperativeHandle(ref, () => ({
-        setChats: (chats: ChatData[]) => {
+        setChats: async (chats: ChatData[]) => {
             flushSync(() => setChats(chats));
-        },
-        show: async () => {
             await animate(".chatItem", { opacity: 0, translateX: -200, scale: 0 }, { duration: 0 });
-            animate(".chatItem", { opacity: 1 }, { delay: stagger(0.05) });
-            await animate(
-                ".chatItem",
-                { translateX: 0, scale: 1 },
-                { type: "spring", damping: 15, stiffness: 250, delay: stagger(0.05) },
-            );
+            return Promise.all([
+                animate(".chatItem", { opacity: 1 }, { delay: stagger(0.05) }),
+                animate(
+                    ".chatItem",
+                    { translateX: 0, scale: 1 },
+                    { type: "spring", damping: 15, stiffness: 250, delay: stagger(0.05) },
+                ),
+            ]).then();
+        },
+        addChat: async (chat: ChatData) => {
+            flushSync(() => setChats(prev => [...prev, chat]));
+            await animate(".chatItem", { opacity: 1 });
         },
     }));
 

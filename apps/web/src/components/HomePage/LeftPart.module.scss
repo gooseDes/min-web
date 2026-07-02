@@ -18,6 +18,8 @@
     @extend .panel;
 
     flex: 1;
+    position: relative;
+    overflow: visible;
 }
 
 .userPanel {
