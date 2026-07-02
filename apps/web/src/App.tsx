@@ -47,7 +47,6 @@ function RootLayout() {
 }
 
 const createRouter = isTauri() ? createHashRouter : createBrowserRouter;
-console.log("isTauri", isTauri(), "createRouter", createRouter);
 
 const router = createRouter([
     {

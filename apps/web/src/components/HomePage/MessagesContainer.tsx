@@ -64,7 +64,12 @@ function MessagesContainer(props: MessagesContainerProps) {
         },
         addMessage: (msg: MessageDataWithSender) => {
             if (!containerRef.current) return;
-            flushSync(() => setMessages(prev => [...prev, { shown: true, type: "header", ...msg }]));
+            flushSync(() =>
+                setMessages(prev => [
+                    ...prev,
+                    { shown: true, type: prev[prev.length - 1]?.sender.id === msg.sender.id ? "regular" : "header", ...msg },
+                ]),
+            );
             if (isAtBottom()) {
                 containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
             }

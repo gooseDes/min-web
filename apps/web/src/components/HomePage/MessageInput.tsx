@@ -36,10 +36,6 @@ function MessageInput(props: MessageInputProps) {
         onTextChanged?.(prefix + value);
     }, [prefix, value, onTextChanged]);
 
-    const onChangeText = useCallback((text: string) => {
-        setValue(text);
-    }, []);
-
     const send = useCallback(() => {
         onSend?.(prefix + value);
         setPrefix("");
@@ -77,12 +73,20 @@ function MessageInput(props: MessageInputProps) {
             )*/}
             <div className={styles.horizontalRow}>
                 <IconButton className={styles.button} icon={faPaperclip} size={24} />
-                <input
-                    className={styles.input}
-                    placeholder={t.your_message}
-                    onChange={e => onChangeText(e.target.value)}
-                    value={value}
-                />
+                <form
+                    className={styles.inputContainer}
+                    onSubmit={e => {
+                        e.preventDefault();
+                        send();
+                    }}
+                >
+                    <input
+                        className={styles.input}
+                        placeholder={t.your_message}
+                        onChange={e => setValue(e.target.value)}
+                        value={value}
+                    />
+                </form>
                 <IconButton className={styles.button} icon={faPaperPlane} size={24} onClick={send} />
             </div>
         </motion.div>
