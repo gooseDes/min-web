@@ -1,4 +1,5 @@
 import apiClient from "@/client";
+import { setCurrentAppState } from "@/utils";
 import LeftPart from "@components/HomePage/LeftPart";
 import { type MessagesContainerHandle } from "@components/HomePage/MessagesContainer";
 import RightPart from "@components/HomePage/RightPart";
@@ -41,6 +42,7 @@ function HomePage() {
         const clearPromise = messagesContainerRef.current?.clearMessages();
         leftPartRef.current?.classList.add(styles.mobileHidden);
         setOpenedChat(chat);
+        setCurrentAppState(`chat-${chat.id}`);
         const messagesRes = await apiClient.fetchChatMessages({ chatId: chat.id });
         if (messagesRes.success) {
             await clearPromise;
@@ -51,6 +53,7 @@ function HomePage() {
     const closeChat = useCallback(() => {
         leftPartRef.current?.classList.remove(styles.mobileHidden);
         setOpenedChat(null);
+        setCurrentAppState("normal");
     }, []);
 
     return (

@@ -2,6 +2,7 @@ import CreateChatPopup from "@components/HomePage/CreateChatPopup";
 import { TranslationProvider } from "@contexts/TranslationProvider";
 import useTranslation from "@hooks/useTranslation";
 import { rootLayoutRef } from "@services/appControlService";
+import { swRegistration } from "@services/otherRefs";
 import { createChatPopupRef } from "@services/popupService";
 import { lazy, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import { createBrowserRouter, createHashRouter, Outlet, RouterProvider } from "react-router-dom";
@@ -35,14 +36,15 @@ function RootLayout(props: RootLayoutProps) {
 
     useEffect(() => {
         initSocket();
-        Translation.init();
-        changeLanguage(Translation.lang);
 
         if (!isTauri() && "serviceWorker" in navigator) {
             const registerSW = () => {
                 navigator.serviceWorker
-                    .register("/sw.js")
-                    .then(reg => console.log("Service Worker registered successfully:", reg.scope))
+                    .register(`/sw.js?apiUrl=${import.meta.env.MIN_API_URL}`)
+                    .then(reg => {
+                        swRegistration.current = reg;
+                        console.log("Service Worker registered successfully:", reg.scope);
+                    })
                     .catch(err => console.error("Service Worker registration failed:", err));
             };
 
@@ -53,6 +55,11 @@ function RootLayout(props: RootLayoutProps) {
                 return () => window.removeEventListener("load", registerSW);
             }
         }
+    }, []);
+
+    useEffect(() => {
+        Translation.init();
+        changeLanguage(Translation.lang);
     }, [changeLanguage]);
 
     return (

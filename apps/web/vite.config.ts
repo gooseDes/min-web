@@ -32,5 +32,26 @@ export default defineConfig({
     },
     build: {
         target: "es2022",
+        rolldownOptions: {
+            output: {
+                codeSplitting: {
+                    minSize: 50000,
+                    groups: [
+                        {
+                            name: "vendor",
+                            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                            minSize: 30000,
+                            maxSize: 500000,
+                            priority: 20,
+                        },
+                        {
+                            name: "charts",
+                            test: /[\\/]node_modules[\\/]echarts[\\/]/,
+                            priority: 10,
+                        },
+                    ],
+                },
+            },
+        },
     },
 });

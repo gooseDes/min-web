@@ -1,4 +1,5 @@
 import apiClient, { initSocket } from "@/client";
+import { requestNotificationPermission } from "@/utils";
 import Divider from "@components/Divider";
 import FlatSelector from "@components/FlatSelector";
 import useLocalStorage from "@hooks/useLocalStorage";
@@ -28,6 +29,7 @@ function AuthPage() {
             initSocket();
             const user = await apiClient.fetchUser({ userId: res.user.id });
             if (user.success) setUser(user.user);
+            requestNotificationPermission();
             await navigate("/");
         } else {
             alert(res.message);
@@ -56,6 +58,7 @@ function AuthPage() {
             initSocket();
             const user = await apiClient.fetchUser({ userId: res.user.id });
             if (user.success) setUser(user.user);
+            requestNotificationPermission();
             await navigate("/");
         } else {
             alert(res.message);
