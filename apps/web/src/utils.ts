@@ -8,7 +8,7 @@ export function requestNotificationPermission() {
     if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
             if (!("PushManager" in window)) {
-                return alert("Push notifications are not supported on this browser.");
+                return console.warn("Push notifications are not supported on this browser.");
             }
             if (permission === "granted") {
                 if (swRegistration.current) {

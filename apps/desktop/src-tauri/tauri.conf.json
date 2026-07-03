@@ -13,7 +13,7 @@
         "withGlobalTauri": true,
         "windows": [
             {
-                "title": "desktop",
+                "title": "Min Desktop",
                 "width": 800,
                 "height": 600
             }
