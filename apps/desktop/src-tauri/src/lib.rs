@@ -1,4 +1,6 @@
+use tauri::image::Image;
 use tauri::menu::{IconMenuItemBuilder, Menu, MenuItem, PredefinedMenuItem};
+use tauri::path::BaseDirectory;
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::Manager;
 
@@ -46,7 +48,14 @@ pub fn run() {
             let menu = Menu::with_items(app, &[&label, &separator, &show_i, &hide_i, &quit_i])?;
 
             let _tray = TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(
+                    Image::from_path(
+                        app.path()
+                            .resolve("assets/tray.png", BaseDirectory::Resource)
+                            .expect("Failed to resolve tray icon path"),
+                    )
+                    .expect("Failed to load tray icon"),
+                )
                 .menu(&menu)
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => {
