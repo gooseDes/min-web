@@ -8,4 +8,8 @@
     bottom: 10px;
     border-radius: 30px;
     color: $primary-color;
+
+    @include mobile {
+        bottom: 80px;
+    }
 }
