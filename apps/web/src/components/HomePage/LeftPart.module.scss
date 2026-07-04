@@ -17,7 +17,12 @@
 .chatsPanel {
     @extend .panel;
 
-    flex: 1;
+    height: calc(100% - 80px - $padding);
+
+    @include mobile {
+        height: 100%;
+    }
+
     position: relative;
     overflow: visible;
 }

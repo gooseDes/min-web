@@ -64,7 +64,7 @@ function RootLayout(props: RootLayoutProps) {
 
     return (
         <div className="app-container">
-            <main className={styles.content}>
+            <main className={styles.appContent}>
                 <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`}>
                     <Outlet />
                 </div>

@@ -18,7 +18,7 @@ $ripple-color: #ffffff66;
 $ripple-color-opaque: #7c7c7e;
 $border-radius: 16px;
 $border-width: 2px;
-$padding: 12px;
+$padding: 10px;
 $font-size-base: 16px;
 $font-size-small: 14px;
 $font-size-smallest: 12px;
@@ -78,9 +78,11 @@ div {
     font-weight: 500;
 }
 
-.content {
+.appContent {
     display: flex;
     flex-direction: column;
+    width: 100dvw;
+    height: 100dvh;
 }
 
 .blurrable {

@@ -2,11 +2,11 @@
 @use "sass:math";
 
 .container {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: math.div($padding, 2);
-    height: 100%;
-    overflow: hidden auto;
+    overflow: hidden scroll;
 
     @include mobile {
         padding-bottom: 70px;
