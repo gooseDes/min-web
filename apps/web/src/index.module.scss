@@ -61,6 +61,9 @@ body {
     padding: 0;
     font-family: $font-family;
     background-color: $bg-color;
+    overscroll-behavior: none;
+    height: 100%;
+    overflow: hidden;
 }
 
 h1 {
