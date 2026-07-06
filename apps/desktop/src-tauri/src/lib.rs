@@ -3,6 +3,7 @@ use tauri::menu::{IconMenuItemBuilder, Menu, MenuItem, PredefinedMenuItem};
 use tauri::path::BaseDirectory;
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Manager};
+use tauri_plugin_autostart::ManagerExt;
 use tauri_plugin_updater::UpdaterExt;
 
 async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -45,6 +46,7 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
 pub fn run() {
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
     tauri::Builder::default()
+        .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_single_instance::init(|app, _, _| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();
@@ -139,6 +141,16 @@ pub fn run() {
                     }
                 })
                 .build(app)?;
+
+            #[cfg(desktop)]
+            {
+                let autostart_manager = app.autolaunch();
+                let _ = autostart_manager.enable();
+                println!(
+                    "registered for autostart? {}",
+                    autostart_manager.is_enabled().unwrap()
+                );
+            }
 
             Ok(())
         })
