@@ -76,8 +76,8 @@ jobs:
                   TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
                   TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
               with:
-                  tagName: app-v${{ steps.version_bump.outputs.tag }}
-                  releaseName: "Min Desktop v${{ steps.version_bump.outputs.tag }}"
+                  tagName: ${{ steps.version_bump.outputs.tag }}
+                  releaseName: "Min Desktop ${{ steps.version_bump.outputs.tag }}"
                   generateReleaseNotes: true
                   releaseDraft: false
                   prerelease: false
