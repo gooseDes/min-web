@@ -8,6 +8,8 @@
         "core:tray:default",
         "opener:default",
         "notification:default",
+        "process:default",
+        "process:allow-restart",
         "fs:default",
         "fs:allow-appcache-write",
         "fs:allow-appcache-read",

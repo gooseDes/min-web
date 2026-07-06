@@ -25,13 +25,25 @@ jobs:
         runs-on: ${{ matrix.platform }}
         steps:
             - uses: actions/checkout@v4
-
+              with:
+                  fetch-depth: 0
             - name: create .env
               shell: bash
               run: |
                   printf '%s' "$ENV_FILE" > apps/web/.env
               env:
                   ENV_FILE: ${{ secrets.ENV_FILE }}
+
+            - name: Automated Version Bump
+              id: version_bump
+              uses: phips28/gh-action-bump-version@master
+              with:
+                  PACKAGEJSON_DIR: "apps/desktop"
+                  package-json-path: "apps/desktop/package.json"
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag-prefix: "app-v"
+                  commit-message: "chore: bump desktop app version to {{version}} [skip ci]"
+                  target-releases-branch: release
 
             - name: install pnpm
               uses: pnpm/action-setup@v4
@@ -61,12 +73,15 @@ jobs:
             - uses: tauri-apps/tauri-action@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+                  TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
               with:
-                  tagName: app-v0.0.${{ github.run_number }}
-                  releaseName: "App v0.0.${{ github.run_number }}"
+                  tagName: app-v${{ steps.version_bump.outputs.newTag }}
+                  releaseName: "Min Desktop v${{ steps.version_bump.outputs.newTag }}"
                   generateReleaseNotes: true
-                  releaseDraft: true
+                  releaseDraft: false
                   prerelease: false
                   args: ${{ matrix.args }}
                   projectPath: "./apps/desktop"
                   buildScriptName: "build"
+                  includeUpdaterJson: true

@@ -2,11 +2,43 @@ use tauri::image::Image;
 use tauri::menu::{IconMenuItemBuilder, Menu, MenuItem, PredefinedMenuItem};
 use tauri::path::BaseDirectory;
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
-use tauri::Manager;
+use tauri::{AppHandle, Manager};
+use tauri_plugin_updater::UpdaterExt;
 
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let updater = app.updater()?;
+    if let Some(update) = updater.check().await? {
+        println!(
+            "New update found! Current version: {}, new version: {}",
+            app.package_info().version,
+            update.version
+        );
+
+        let mut downloaded = 0;
+
+        update
+            .download_and_install(
+                move |chunk_length, total_length| {
+                    downloaded += chunk_length;
+                    if let Some(total) = total_length {
+                        let percentage = (downloaded as f64 / total as f64) * 100.0;
+                        println!("Download progress: {:.2}%", percentage);
+                    }
+                },
+                move || {
+                    println!("Download finished! Applying update...");
+                },
+            )
+            .await?;
+
+        println!("Update installed successfully! Restarting application...");
+
+        app.restart();
+    } else {
+        println!("No update available.");
+    }
+
+    Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -17,6 +49,8 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 api.prevent_close();
@@ -33,6 +67,13 @@ pub fn run() {
             }
 
             let handle = app.handle();
+
+            let updater_handle = handle.clone();
+            tauri::async_runtime::spawn(async move {
+                if let Err(err) = check_for_updates(updater_handle).await {
+                    eprintln!("Failed to check or apply update: {}", err);
+                }
+            });
 
             let app_icon = app.default_window_icon().unwrap().clone();
 
@@ -95,7 +136,6 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
