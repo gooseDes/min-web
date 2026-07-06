@@ -1,7 +1,7 @@
 [package]
 name = "min-desktop"
 version = "0.1.0"
-description = "A Tauri App"
+description = "The best messenger in the world (no)"
 authors = ["you"]
 edition = "2021"
 
