@@ -37,6 +37,7 @@ export default defineConfig({
                 codeSplitting: {
                     minSize: 50000,
                     groups: [
+                        { name: "framer-motion-vendor", test: /\/framer-motion/ },
                         {
                             name: "vendor",
                             test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,

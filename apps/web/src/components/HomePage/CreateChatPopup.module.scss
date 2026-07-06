@@ -10,6 +10,7 @@
     height: 600px;
     max-width: calc(100% - $padding);
     max-height: calc(100% - $padding);
+    z-index: 100;
 }
 
 .header {

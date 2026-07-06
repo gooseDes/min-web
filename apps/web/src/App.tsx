@@ -4,6 +4,7 @@ import useTranslation from "@hooks/useTranslation";
 import { rootLayoutRef } from "@services/appControlService";
 import { swRegistration } from "@services/otherRefs";
 import { createChatPopupRef } from "@services/popupService";
+import { LayoutGroup } from "framer-motion";
 import { lazy, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import { createBrowserRouter, createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { initSocket } from "./client";
@@ -13,8 +14,8 @@ import { morphThingRef } from "./services/morphService";
 import Translation from "./translation";
 import { isTauri } from "./utils";
 
-const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
+const AuthPage = lazy(() => import("./pages/AuthPage"));
 
 export interface RootLayoutHandle {
     setIsBlurred: (isBlurred: boolean) => void;
@@ -65,11 +66,13 @@ function RootLayout(props: RootLayoutProps) {
     return (
         <div className="app-container">
             <main className={styles.appContent}>
-                <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`}>
-                    <Outlet />
-                </div>
-                <CreateChatPopup ref={createChatPopupRef} />
-                <MorphThing ref={morphThingRef} />
+                <LayoutGroup id="layout_group">
+                    <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`}>
+                        <Outlet />
+                    </div>
+                    <MorphThing ref={morphThingRef} />
+                    <CreateChatPopup ref={createChatPopupRef} />
+                </LayoutGroup>
             </main>
         </div>
     );
