@@ -1,6 +1,4 @@
-import useLocalStorage from "@hooks/useLocalStorage";
 import type { MessageDataWithSender } from "@min/api-client";
-import { dateToString } from "@min/api-client/utils";
 import { motion } from "framer-motion";
 import { useImperativeHandle, useRef, useState, type Ref } from "react";
 import { flushSync } from "react-dom";
@@ -22,8 +20,6 @@ export interface MessagesContainerProps {
 
 function MessagesContainer(props: MessagesContainerProps) {
     const { ref } = props;
-
-    const [user] = useLocalStorage("user");
 
     const [messages, setMessages] = useState<ListMessageData[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -104,11 +100,7 @@ function MessagesContainer(props: MessagesContainerProps) {
                 return (
                     <Message
                         key={msg.id}
-                        side={msg.sender.id === user.id ? "right" : "left"}
-                        text={msg.content}
-                        senderName={msg.sender.username === user.username ? "You" : msg.sender.username}
-                        senderAvatar={`${import.meta.env.MIN_API_URL}/avatars/${msg.sender.avatar}.webp`}
-                        sentAt={dateToString(msg.sentAt, "en-US", false)}
+                        msg={msg}
                         type={msg.type}
                         className={`message-${msg.id}`}
                         shown={showMessages && (animationProgress > indexFromBottom || indexFromBottom >= 15)}

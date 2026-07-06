@@ -162,3 +162,8 @@ button {
     flex-direction: column;
     overflow: auto;
 }
+
+.secondaryText {
+    color: $secondary-color;
+    font-weight: 400;
+}

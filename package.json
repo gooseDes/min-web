@@ -5,6 +5,7 @@
     "dev:desktop": "pnpm --filter min-desktop tauri dev",
     "build:web": "pnpm --filter web build",
     "build:desktop": "pnpm --filter min-desktop build",
+    "update_api": "pnpm --filter web update_api",
     "check": "pnpm --filter web check",
     "deploy": "pnpm --filter web deploy",
     "release": "git push origin main:release -f"

@@ -56,3 +56,33 @@ export function setCurrentAppState(state: string) {
         });
     }
 }
+
+interface NotReplyMessage {
+    isReply: false;
+    replyingToId: null;
+    text: string;
+}
+
+interface ReplyMessage {
+    isReply: true;
+    replyingToId: number;
+    text: string;
+}
+
+export type MessageContent = NotReplyMessage | ReplyMessage;
+
+export function parseMessageContent(text: string): MessageContent {
+    const lines = text.split("\n");
+    if (lines[0].startsWith("/reply ")) {
+        return {
+            text: lines.slice(1).join("\n"),
+            replyingToId: parseInt(lines[0].substring(7)),
+            isReply: true,
+        };
+    }
+    return {
+        text: lines.join("\n"),
+        replyingToId: null,
+        isReply: false,
+    };
+}
