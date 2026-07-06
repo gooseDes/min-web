@@ -6,7 +6,54 @@ on:
             - release
 
 jobs:
+    bump-and-sync-version:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        outputs:
+            new_tag: ${{ steps.version_bump.outputs.tag }}
+            skipped: ${{ steps.version_bump.outputs.skipped }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  persist-credentials: true
+
+            - name: Automated Version Bump on Release
+              id: version_bump
+              uses: TriPSs/conventional-changelog-action@v6
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  version-file: "apps/desktop/package.json"
+                  tag-prefix: "app-v"
+                  git-message: "chore: bump desktop app version to {version} [skip ci]"
+                  git-branch: "release"
+                  output-file: "false"
+
+            - name: Switch Git Runner to Main Branch
+              if: steps.version_bump.outputs.skipped == 'false'
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git checkout -b main origin/main
+                  git pull origin main
+
+            - name: Sync Version Bump to Main Branch
+              if: steps.version_bump.outputs.skipped == 'false'
+              uses: TriPSs/conventional-changelog-action@v6
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  version-file: "apps/desktop/package.json"
+                  tag-prefix: "app-v"
+                  git-message: "chore: bump desktop app version to {version} [skip ci]"
+                  git-branch: "main"
+                  output-file: "false"
+                  create-status: "false"
+                  skip-tag: "true"
+
     publish-tauri:
+        needs: bump-and-sync-version
+        if: needs.bump-and-sync-version.outputs.skipped == 'false'
         permissions:
             contents: write
         strategy:
@@ -26,24 +73,15 @@ jobs:
         steps:
             - uses: actions/checkout@v4
               with:
+                  ref: ${{ needs.bump-and-sync-version.outputs.new_tag }} # Check out the exact tag created in Job 1
                   fetch-depth: 0
+
             - name: create .env
               shell: bash
               run: |
                   printf '%s' "$ENV_FILE" > apps/web/.env
               env:
                   ENV_FILE: ${{ secrets.ENV_FILE }}
-
-            - name: Automated Version Bump
-              id: version_bump
-              uses: TriPSs/conventional-changelog-action@v6
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  version-file: "apps/desktop/package.json"
-                  tag-prefix: "app-v"
-                  git-message: "chore: bump desktop app version to {version} [skip ci]"
-                  target-branch: "release"
-                  output-file: "false"
 
             - name: install pnpm
               uses: pnpm/action-setup@v4
@@ -76,8 +114,8 @@ jobs:
                   TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
                   TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
               with:
-                  tagName: ${{ steps.version_bump.outputs.tag }}
-                  releaseName: "Min Desktop ${{ steps.version_bump.outputs.tag }}"
+                  tagName: ${{ needs.bump-and-sync-version.outputs.new_tag }}
+                  releaseName: "Min Desktop ${{ needs.bump-and-sync-version.outputs.new_tag }}"
                   generateReleaseNotes: true
                   releaseDraft: false
                   prerelease: false
