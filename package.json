@@ -2,9 +2,9 @@
   "name": "min",
   "scripts": {
     "dev:web": "pnpm --filter web dev",
-    "dev:desktop": "pnpm --filter desktop tauri dev",
+    "dev:desktop": "pnpm --filter min-desktop tauri dev",
     "build:web": "pnpm --filter web build",
-    "build:desktop": "pnpm --filter desktop build",
+    "build:desktop": "pnpm --filter min-desktop build",
     "check": "pnpm --filter web check",
     "deploy": "pnpm --filter web deploy",
     "release": "git push origin main:release -f"
