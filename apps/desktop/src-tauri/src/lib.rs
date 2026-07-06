@@ -1,9 +1,11 @@
+use std::env;
+
 use tauri::image::Image;
 use tauri::menu::{IconMenuItemBuilder, Menu, MenuItem, PredefinedMenuItem};
 use tauri::path::BaseDirectory;
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Manager};
-use tauri_plugin_autostart::ManagerExt;
+use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_updater::UpdaterExt;
 
 async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -46,7 +48,10 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
 pub fn run() {
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
     tauri::Builder::default()
-        .plugin(tauri_plugin_autostart::Builder::new().build())
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            Some(vec!["--hidden"]),
+        ))
         .plugin(tauri_plugin_single_instance::init(|app, _, _| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();
@@ -75,6 +80,18 @@ pub fn run() {
             }
 
             let handle = app.handle();
+
+            // Check for args
+            let args: Vec<String> = env::args().collect();
+            let start_hidden = args.iter().any(|a| a == "--hidden");
+
+            // Show the window if not hidden
+            if let Some(window) = app.get_webview_window("main") {
+                if !start_hidden {
+                    window.show().unwrap();
+                    window.set_focus().unwrap();
+                }
+            }
 
             let updater_handle = handle.clone();
             tauri::async_runtime::spawn(async move {
