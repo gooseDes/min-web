@@ -12,7 +12,7 @@ depends=('webkit2gtk-4.1' 'gtk3' 'libsoup3' 'openssl' 'xdotool')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 
-source=("DEB_FILE_PLACEHOLDER")
+source=("LOCAL_DEB_FILE_PLACEHOLDER")
 sha256sums=('SKIP')
 
 package() {
