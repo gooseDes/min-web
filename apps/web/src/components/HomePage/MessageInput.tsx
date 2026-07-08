@@ -23,6 +23,7 @@ function MessageInput(props: MessageInputProps) {
     const { t } = useTranslation();
 
     const attachmentInputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLDivElement>(null);
 
     const [prefix, setPrefix] = useState<string>("");
     const [value, setValue] = useState<string>("");
@@ -41,6 +42,7 @@ function MessageInput(props: MessageInputProps) {
 
     const send = () => {
         onSend?.(prefix + value);
+        if (inputRef.current) inputRef.current.innerText = "";
         setPrefix("");
         setValue("");
     };
@@ -57,6 +59,21 @@ function MessageInput(props: MessageInputProps) {
         if (res.success) {
             const img = `![attachment](${import.meta.env.MIN_API_URL}${res.urls[0]})`;
             setValue(prev => (prev.trim() ? prev.trim() + "\n" + img : img));
+        }
+    };
+
+    const handleInputChange = (e: React.InputEvent<HTMLDivElement>) => {
+        const el = e.currentTarget;
+        if (el.innerHTML === "<br>" || el.innerText.trim() === "") {
+            el.innerHTML = "";
+        }
+        setValue(el.innerText);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            send();
         }
     };
 
@@ -91,20 +108,17 @@ function MessageInput(props: MessageInputProps) {
             )*/}
             <div className={styles.horizontalRow}>
                 <IconButton className={styles.button} icon={faPaperclip} size={24} onClick={attach} />
-                <form
-                    className={styles.inputContainer}
-                    onSubmit={e => {
-                        e.preventDefault();
-                        send();
-                    }}
-                >
-                    <input
+                <div className={styles.inputContainer}>
+                    <div
+                        ref={inputRef}
+                        role="textbox"
+                        contentEditable
                         className={styles.input}
-                        placeholder={t.your_message}
-                        onChange={e => setValue(e.target.value)}
-                        value={value}
+                        onInput={handleInputChange}
+                        onKeyDown={handleKeyDown}
+                        data-placeholder={t.your_message}
                     />
-                </form>
+                </div>
                 <IconButton className={styles.button} icon={faPaperPlane} size={24} onClick={send} />
             </div>
             <input

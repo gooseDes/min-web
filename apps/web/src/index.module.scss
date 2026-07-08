@@ -98,7 +98,8 @@ div {
     pointer-events: none;
 }
 
-input {
+input,
+textarea {
     @extend .shadow;
 
     font-family: $font-family;
