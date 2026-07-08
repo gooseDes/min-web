@@ -1,9 +1,10 @@
+import apiClient from "@/client";
 import IconButton from "@components/IconButton";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import useTranslation from "@hooks/useTranslation";
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useImperativeHandle, useState, type Ref } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import styles from "./MessageInput.module.scss";
 
 export interface MessageInputHandle {
@@ -21,6 +22,8 @@ function MessageInput(props: MessageInputProps) {
 
     const { t } = useTranslation();
 
+    const attachmentInputRef = useRef<HTMLInputElement>(null);
+
     const [prefix, setPrefix] = useState<string>("");
     const [value, setValue] = useState<string>("");
 
@@ -36,11 +39,26 @@ function MessageInput(props: MessageInputProps) {
         onTextChanged?.(prefix + value);
     }, [prefix, value, onTextChanged]);
 
-    const send = useCallback(() => {
+    const send = () => {
         onSend?.(prefix + value);
         setPrefix("");
         setValue("");
-    }, [prefix, value, onSend]);
+    };
+
+    const attach = () => {
+        attachmentInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const res = await apiClient.attachImage(localStorage.getItem("token") ?? "", file);
+        if (res.success) {
+            const img = `![attachment](${import.meta.env.MIN_API_URL}${res.urls[0]})`;
+            setValue(prev => (prev.trim() ? prev.trim() + "\n" + img : img));
+        }
+    };
 
     return (
         <motion.div
@@ -72,7 +90,7 @@ function MessageInput(props: MessageInputProps) {
                 </motion.div>
             )*/}
             <div className={styles.horizontalRow}>
-                <IconButton className={styles.button} icon={faPaperclip} size={24} />
+                <IconButton className={styles.button} icon={faPaperclip} size={24} onClick={attach} />
                 <form
                     className={styles.inputContainer}
                     onSubmit={e => {
@@ -89,6 +107,13 @@ function MessageInput(props: MessageInputProps) {
                 </form>
                 <IconButton className={styles.button} icon={faPaperPlane} size={24} onClick={send} />
             </div>
+            <input
+                type="file"
+                ref={attachmentInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+            />
         </motion.div>
     );
 }
