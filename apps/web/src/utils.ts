@@ -1,3 +1,4 @@
+import { setItem } from "@hooks/useLocalStorage";
 import { swRegistration } from "@services/otherRefs";
 
 export function isTauri() {
@@ -55,6 +56,8 @@ export function setCurrentAppState(state: string) {
             state: state,
         });
     }
+
+    setItem("appState", state);
 }
 
 interface NotReplyMessage {

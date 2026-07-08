@@ -1,5 +1,6 @@
 import CreateChatPopup from "@components/HomePage/CreateChatPopup";
 import { TranslationProvider } from "@contexts/TranslationProvider";
+import { setItem } from "@hooks/useLocalStorage";
 import useTranslation from "@hooks/useTranslation";
 import { rootLayoutRef } from "@services/appControlService";
 import { swRegistration } from "@services/otherRefs";
@@ -37,6 +38,7 @@ function RootLayout(props: RootLayoutProps) {
 
     useEffect(() => {
         initSocket();
+        setItem("appState", "normal");
 
         if (!isTauri() && "serviceWorker" in navigator) {
             const registerSW = () => {

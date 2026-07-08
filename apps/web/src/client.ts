@@ -1,5 +1,7 @@
+import { getItem } from "@hooks/useLocalStorage";
 import { ApiClient } from "@min/api-client";
 import { appCacheDir, join } from "@tauri-apps/api/path";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { BaseDirectory, writeFile } from "@tauri-apps/plugin-fs";
 import { fetch } from "@tauri-apps/plugin-http";
 import { sendNotification } from "@tauri-apps/plugin-notification";
@@ -9,6 +11,8 @@ const apiClient = new ApiClient({
     url: import.meta.env.MIN_API_URL,
 });
 
+let lastMsgId: number = -1;
+
 export function initSocket() {
     const token = localStorage.getItem("token");
     if (token) {
@@ -16,6 +20,13 @@ export function initSocket() {
 
         if (isTauri()) {
             apiClient.subscribeToMessages(async msg => {
+                if (
+                    getItem("user").id === msg.sender.id ||
+                    lastMsgId === msg.id ||
+                    (getItem("appState") === `chat-${msg.chatId}` && (await getCurrentWindow().isFocused()))
+                )
+                    return;
+                lastMsgId = msg.id;
                 const iconUrl = `${import.meta.env.MIN_API_URL}/avatars/${msg.sender.avatar}.png`;
                 const responce = await fetch(iconUrl, { method: "GET" });
                 const buffer = await responce.arrayBuffer();
