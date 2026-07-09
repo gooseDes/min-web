@@ -7,7 +7,7 @@ arch=('x86_64')
 url="https://github.com/gooseDes/min-web"
 license=('MIT')
 
-depends=('webkit2gtk-4.1' 'gtk3' 'libsoup3' 'openssl' 'xdotool')
+depends=('webkit2gtk-4.1' 'gtk3' 'libsoup3' 'openssl' 'xdotool' 'polkit')
 
 provides=("$_pkgname")
 conflicts=("$_pkgname")

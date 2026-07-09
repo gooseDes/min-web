@@ -1,5 +1,11 @@
 use std::env;
+use std::fs::File;
+use std::io::Write;
+use std::process::Command;
 
+use futures_util::StreamExt;
+use semver::Version;
+use serde::Deserialize;
 use tauri::image::Image;
 use tauri::menu::{IconMenuItemBuilder, Menu, MenuItem, PredefinedMenuItem};
 use tauri::path::BaseDirectory;
@@ -7,6 +13,22 @@ use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_updater::UpdaterExt;
+
+fn is_archlinux() -> bool {
+    which::which("pacman").is_ok() && !which::which("dpkg").is_ok()
+}
+
+#[derive(Deserialize, Debug)]
+struct Release {
+    tag_name: String,
+    assets: Vec<Asset>,
+}
+
+#[derive(Deserialize, Debug)]
+struct Asset {
+    name: String,
+    browser_download_url: String,
+}
 
 async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let updater = app.updater()?;
@@ -19,22 +41,87 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
 
         let mut downloaded = 0;
 
-        update
-            .download_and_install(
-                move |chunk_length, total_length| {
-                    downloaded += chunk_length;
-                    if let Some(total) = total_length {
-                        let percentage = (downloaded as f64 / total as f64) * 100.0;
-                        println!("Download progress: {:.2}%", percentage);
-                    }
-                },
-                move || {
-                    println!("Download finished! Applying update...");
-                },
-            )
-            .await?;
+        if is_archlinux() {
+            println!("Checking for Arch Linux update...");
+            let client = reqwest::Client::builder()
+                .user_agent("min-desktop")
+                .build()?;
 
-        println!("Update installed successfully! Restarting application...");
+            let release: Release = client
+                .get("https://api.github.com/repos/gooseDes/min-web/releases/latest")
+                .send()
+                .await?
+                .json()
+                .await?;
+            let version_string: String = release.tag_name.chars().skip(5).collect();
+            let version = Version::parse(&version_string).unwrap_or_else(|_| Version::new(0, 0, 0));
+
+            if version > app.package_info().version {
+                println!("Found new version: {}", version_string);
+                let asset = release.assets.iter().find(|asset| {
+                    asset.name.contains(".pkg.tar.zst") && !asset.name.contains("-debug-")
+                });
+                if let Some(asset) = asset {
+                    println!("Downloading asset: {}", asset.name);
+                    let dir = app.path().app_cache_dir()?;
+                    let path = dir.join(asset.name.clone());
+                    let response = client.get(&asset.browser_download_url).send().await?;
+                    let mut file = File::create(path.clone())?;
+                    let mut stream = response.bytes_stream();
+
+                    while let Some(chunk) = stream.next().await {
+                        let data = chunk?;
+                        file.write_all(&data)?;
+                    }
+
+                    println!("Download completed. Installing...");
+                    match Command::new("pkexec")
+                        .arg("pacman")
+                        .arg("-U")
+                        .arg(path.clone())
+                        .arg("--noconfirm")
+                        .output()
+                    {
+                        Ok(output) => {
+                            if output.status.success() {
+                                println!("Installed successfully! Restarting...");
+                            } else {
+                                println!(
+                                    "Failed to install: {}",
+                                    String::from_utf8_lossy(&output.stderr)
+                                );
+                            }
+                        }
+                        Err(e) => println!("Failed to install: {}", e),
+                    }
+                } else {
+                    println!("No matching asset found.");
+                }
+            } else {
+                println!(
+                    "No newer version available. Current version: {}, latest version: {}",
+                    app.package_info().version,
+                    version
+                );
+            }
+        } else {
+            update
+                .download_and_install(
+                    move |chunk_length, total_length| {
+                        downloaded += chunk_length;
+                        if let Some(total) = total_length {
+                            let percentage = (downloaded as f64 / total as f64) * 100.0;
+                            println!("Download progress: {:.2}%", percentage);
+                        }
+                    },
+                    move || {
+                        println!("Download finished! Applying update...");
+                    },
+                )
+                .await?;
+
+            println!("Update installed successfully! Restarting application...");
+        }
 
         app.restart();
     } else {
