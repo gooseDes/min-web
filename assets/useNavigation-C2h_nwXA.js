@@ -1,0 +1,1 @@
+import{n as e}from"./vendor-CW0SI63X.js";import{n as t,x as n}from"./index-DKYKz761.js";var r=e();function i(){let e=(0,r.c)(2),i=t(),a;return e[0]===i?a=e[1]:(a=async e=>{await i(e,{viewTransition:!n()})},e[0]=i,e[1]=a),a}export{i as t};
