@@ -3,10 +3,10 @@ import ClickableProfile from "@components/ClickableProfile";
 import IconButton from "@components/IconButton";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import type { ChatData, UserData } from "@min/api-client";
+import { messagesContainerRef } from "@services/appControlService";
 import { motion } from "framer-motion";
 import { useCallback, useMemo } from "react";
 import MessageInput from "./MessageInput";
-import type { MessagesContainerHandle } from "./MessagesContainer";
 import MessagesContainer from "./MessagesContainer";
 import styles from "./RightPart.module.scss";
 
@@ -14,11 +14,10 @@ export interface RightPartProps {
     openedChat: ChatData | null;
     user: UserData;
     closeChat: () => void;
-    messagesContainerRef: React.RefObject<MessagesContainerHandle | null>;
 }
 
 function RightPart(props: RightPartProps) {
-    const { openedChat, user, closeChat, messagesContainerRef } = props;
+    const { openedChat, user, closeChat } = props;
 
     const participant = useMemo(
         () => openedChat?.participants.find(participant => participant.id !== user.id),

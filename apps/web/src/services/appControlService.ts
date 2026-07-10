@@ -1,5 +1,6 @@
 import type { RootLayoutHandle } from "@/App";
 import type { ChatsContainerHandle } from "@components/HomePage/ChatsContainer";
+import type { MessagesContainerHandle } from "@components/HomePage/MessagesContainer";
 import type { ChatData } from "@min/api-client";
 import React from "react";
 
@@ -19,4 +20,11 @@ export function setChatsInContainer(chats: ChatData[]) {
 
 export function addChatToContainer(chat: ChatData) {
     chatsContainerRef.current?.addChat(chat);
+}
+
+// MessagesContainer
+export const messagesContainerRef = React.createRef<MessagesContainerHandle>();
+
+export function scrollMessagesContainerToBottom(behavior: ScrollBehavior = "smooth") {
+    messagesContainerRef.current?.scrollToBottom(behavior);
 }

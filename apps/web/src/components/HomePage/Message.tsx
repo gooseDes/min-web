@@ -5,8 +5,10 @@ import { faReply } from "@fortawesome/free-solid-svg-icons";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { MessageData, MessageDataWithSender, UserData } from "@min/api-client";
 import { dateToString } from "@min/api-client/utils";
+import { scrollMessagesContainerToBottom } from "@services/appControlService";
 import { AnimatePresence, motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import Markdown from "markdown-to-jsx";
+import { memo, useEffect, useRef, useState } from "react";
 import styles from "./Message.module.scss";
 
 export interface MessageProps {
@@ -15,6 +17,50 @@ export interface MessageProps {
     className?: string;
     shown?: boolean;
     animDelay?: number;
+}
+
+function MyImage({ src, alt }: { src: string; alt: string }) {
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const ref = useRef<HTMLImageElement>(null);
+
+    useEffect(() => {
+        const currentElement = ref.current;
+        if (!currentElement) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+            },
+            {
+                root: null,
+                threshold: 0.1,
+            },
+        );
+
+        observer.observe(currentElement);
+
+        return () => {
+            if (currentElement) {
+                observer.unobserve(currentElement);
+            }
+        };
+    }, []);
+
+    return (
+        <motion.img
+            ref={ref}
+            className={styles.image}
+            src={src}
+            alt={alt}
+            onLoad={() => {
+                scrollMessagesContainerToBottom(isVisible ? "smooth" : "auto");
+                setLoaded(true);
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: loaded ? 1 : 0 }}
+        />
+    );
 }
 
 const Message = memo(function Message(props: MessageProps) {
@@ -68,7 +114,12 @@ const Message = memo(function Message(props: MessageProps) {
                         <Icon icon={faReply} size={12} />
                         <p>{`${replyingToSender?.username || "Idk"}: ${replyingToMessage?.content || "Loading..."}`}</p>
                     </div>
-                    <p className={styles.text}>{content.text}</p>
+                    <Markdown
+                        options={{ overrides: { img: MyImage }, disableParsingRawHTML: true, forceBlock: false }}
+                        className={styles.text}
+                    >
+                        {content.text}
+                    </Markdown>
                     <p className={styles.sentAt}>{dateToString(msg.sentAt, "en-US", false)}</p>
                 </motion.div>
             </motion.div>

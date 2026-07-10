@@ -8,6 +8,7 @@ import styles from "./MessagesContainer.module.scss";
 type ListMessageData = MessageDataWithSender & { shown: boolean; type: "header" | "regular" };
 
 export interface MessagesContainerHandle {
+    scrollToBottom: (behavior: ScrollBehavior) => void;
     clearMessages: () => Promise<void>;
     setMessages: (messages: MessageDataWithSender[]) => Promise<void>;
     addMessage: (message: MessageDataWithSender) => void;
@@ -26,7 +27,7 @@ function MessagesContainer(props: MessagesContainerProps) {
     const [animationProgress, setAnimationProgress] = useState<number>(0);
     const [showMessages, setShowMessages] = useState<boolean>(false);
 
-    function isAtBottom() {
+    const isAtBottom = () => {
         if (!containerRef.current) return false;
 
         return (
@@ -34,9 +35,16 @@ function MessagesContainer(props: MessagesContainerProps) {
                 containerRef.current?.scrollHeight - containerRef.current?.scrollTop - containerRef.current?.clientHeight,
             ) < 200
         );
-    }
+    };
+
+    const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+        if (!containerRef.current) return;
+
+        containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior });
+    };
 
     useImperativeHandle(ref, () => ({
+        scrollToBottom: (behavior: ScrollBehavior = "smooth") => scrollToBottom(behavior),
         clearMessages: () => {
             return new Promise(resolve => {
                 setShowMessages(false);
@@ -75,15 +83,11 @@ function MessagesContainer(props: MessagesContainerProps) {
                     { shown: true, type: prev[prev.length - 1]?.sender.id === msg.sender.id ? "regular" : "header", ...msg },
                 ]),
             );
-            if (isAtBottom()) {
-                containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
-            }
+            if (isAtBottom()) scrollToBottom();
         },
         removeMessage: (msgId: number) => {
             flushSync(() => setMessages(prev => prev.filter(m => m.id !== msgId)));
-            if (isAtBottom()) {
-                containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
-            }
+            if (isAtBottom()) scrollToBottom();
         },
     }));
 
