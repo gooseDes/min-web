@@ -48,7 +48,6 @@ fn apply_update(app: AppHandle) {
 }
 
 async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    apply_update(app.clone());
     let updater = app.updater()?;
     if let Some(update) = updater.check().await? {
         println!(
