@@ -19,7 +19,7 @@ export interface MessageProps {
     animDelay?: number;
 }
 
-function MyImage({ src, alt }: { src: string; alt: string }) {
+function MyImage({ src, alt, shown }: { src: string; alt: string; shown: boolean }) {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const ref = useRef<HTMLImageElement>(null);
@@ -54,11 +54,11 @@ function MyImage({ src, alt }: { src: string; alt: string }) {
             src={src}
             alt={alt}
             onLoad={() => {
-                scrollMessagesContainerToBottom(isVisible ? "smooth" : "auto");
+                scrollMessagesContainerToBottom(isVisible && shown ? "smooth" : "auto");
                 setLoaded(true);
             }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: loaded ? 1 : 0 }}
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: loaded ? 1 : 0, scaleY: loaded ? 1 : 0 }}
         />
     );
 }
@@ -115,7 +115,11 @@ const Message = memo(function Message(props: MessageProps) {
                         <p>{`${replyingToSender?.username || "Idk"}: ${replyingToMessage?.content || "Loading..."}`}</p>
                     </div>
                     <Markdown
-                        options={{ overrides: { img: MyImage }, disableParsingRawHTML: true, forceBlock: false }}
+                        options={{
+                            overrides: { img: ({ src, alt }) => <MyImage src={src} alt={alt} shown={shown} /> },
+                            disableParsingRawHTML: true,
+                            forceBlock: false,
+                        }}
                         className={styles.text}
                     >
                         {content.text}

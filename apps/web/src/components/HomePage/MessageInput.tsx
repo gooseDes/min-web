@@ -40,6 +40,28 @@ function MessageInput(props: MessageInputProps) {
         onTextChanged?.(prefix + value);
     }, [prefix, value, onTextChanged]);
 
+    const addAttachment = async (file: File) => {
+        const res = await apiClient.attachImage(localStorage.getItem("token") ?? "", file);
+        if (res.success) {
+            const img = `![attachment](${import.meta.env.MIN_API_URL}${res.urls[0]})`;
+            let newValue = value;
+            setValue(prev => {
+                newValue = prev.trim() ? prev.trim() + "\n" + img : img;
+                return newValue;
+            });
+            if (!inputRef.current) return;
+            inputRef.current.innerText = newValue;
+            inputRef.current.focus();
+            const selection = window.getSelection();
+            if (!selection) return;
+            const range = document.createRange();
+            range.selectNodeContents(inputRef.current);
+            range.collapse(false);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    };
+
     const send = () => {
         onSend?.(prefix + value);
         if (inputRef.current) inputRef.current.innerText = "";
@@ -55,11 +77,7 @@ function MessageInput(props: MessageInputProps) {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const res = await apiClient.attachImage(localStorage.getItem("token") ?? "", file);
-        if (res.success) {
-            const img = `![attachment](${import.meta.env.MIN_API_URL}${res.urls[0]})`;
-            setValue(prev => (prev.trim() ? prev.trim() + "\n" + img : img));
-        }
+        addAttachment(file);
     };
 
     const handleInputChange = (e: React.InputEvent<HTMLDivElement>) => {
@@ -74,6 +92,24 @@ function MessageInput(props: MessageInputProps) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             send();
+        }
+    };
+
+    const handlePaste = async (e: React.ClipboardEvent<HTMLDivElement>) => {
+        const clipboardData = e.clipboardData;
+        if (!clipboardData) return;
+
+        const items = clipboardData.items;
+        if (!items) return;
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (item.type.indexOf("image") !== -1) {
+                e.preventDefault();
+
+                const file = item.getAsFile();
+                if (file) addAttachment(file);
+            }
         }
     };
 
@@ -117,6 +153,7 @@ function MessageInput(props: MessageInputProps) {
                         onInput={handleInputChange}
                         onKeyDown={handleKeyDown}
                         data-placeholder={t.your_message}
+                        onPaste={handlePaste}
                     />
                 </div>
                 <IconButton className={styles.button} icon={faPaperPlane} size={24} onClick={send} />
