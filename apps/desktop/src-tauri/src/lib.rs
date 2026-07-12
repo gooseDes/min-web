@@ -12,6 +12,7 @@ use tauri::path::BaseDirectory;
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
+use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 use tauri_plugin_updater::UpdaterExt;
 
 fn is_archlinux() -> bool {
@@ -30,7 +31,24 @@ struct Asset {
     browser_download_url: String,
 }
 
+fn apply_update(app: AppHandle) {
+    app.dialog()
+        .message("New update is installed. Apply now?")
+        .title("Software Update")
+        .kind(MessageDialogKind::Info)
+        .buttons(MessageDialogButtons::OkCancelCustom(
+            String::from("Yes"),
+            String::from("No"),
+        ))
+        .show(move |confirmed: bool| {
+            if confirmed {
+                app.restart();
+            }
+        });
+}
+
 async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    apply_update(app.clone());
     let updater = app.updater()?;
     if let Some(update) = updater.check().await? {
         println!(
@@ -85,6 +103,7 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
                         Ok(output) => {
                             if output.status.success() {
                                 println!("Installed successfully! Restarting...");
+                                apply_update(app);
                             } else {
                                 println!(
                                     "Failed to install: {}",
@@ -121,9 +140,8 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
                 .await?;
 
             println!("Update installed successfully! Restarting application...");
+            apply_update(app);
         }
-
-        app.restart();
     } else {
         println!("No update available.");
     }
@@ -150,6 +168,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
