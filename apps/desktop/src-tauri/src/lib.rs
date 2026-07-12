@@ -34,7 +34,7 @@ struct Asset {
 fn apply_update(app: AppHandle) {
     app.dialog()
         .message("New update is installed. Apply now?")
-        .title("Software Update")
+        .title("Min Desktop Update")
         .kind(MessageDialogKind::Info)
         .buttons(MessageDialogButtons::OkCancelCustom(
             String::from("Yes"),
