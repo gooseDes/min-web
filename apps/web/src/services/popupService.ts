@@ -1,8 +1,9 @@
-import type { CreateChatPopupHandle } from "@components/HomePage/CreateChatPopup";
+import type { PopupHandle } from "@components/Popup";
 import React from "react";
 import { setIsAppBlurred } from "./appControlService";
 
-export const createChatPopupRef = React.createRef<CreateChatPopupHandle>();
+// Create Chat Popup
+export const createChatPopupRef = React.createRef<PopupHandle>();
 
 let isCreateChatPopupOpen = false;
 const createChatPopupListeners = new Set<() => void>();
@@ -30,4 +31,17 @@ export const closeCreateChatPopup = () => {
     isCreateChatPopupOpen = false;
     notifyCreateChatPopupListeners();
     createChatPopupRef.current?.close();
+};
+
+// User Popup
+export const userPopupRef = React.createRef<PopupHandle>();
+
+export const openUserPopup = () => {
+    setIsAppBlurred(true);
+    userPopupRef.current?.open();
+};
+
+export const closeUserPopup = () => {
+    setIsAppBlurred(false);
+    userPopupRef.current?.close();
 };

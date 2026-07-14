@@ -28,7 +28,7 @@ function CreateChatButton() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className={styles.button}
-                    layoutId="add_chat"
+                    layoutId="add-chat"
                     onClick={() => openCreateChatPopup()}
                 >
                     <Icon icon={faPlus} size={24} />

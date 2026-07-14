@@ -74,6 +74,14 @@ h1 {
     margin: 8px;
 }
 
+h2 {
+    font-family: $font-family;
+    font-size: 24px;
+    color: $primary-color;
+    text-align: center;
+    margin: 8px;
+}
+
 p,
 div {
     font-family: $font-family;

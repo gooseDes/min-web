@@ -1,10 +1,11 @@
 import CreateChatPopup from "@components/HomePage/CreateChatPopup";
+import UserPopup from "@components/HomePage/UserPopup";
 import { TranslationProvider } from "@contexts/TranslationProvider";
 import { setItem } from "@hooks/useLocalStorage";
 import useTranslation from "@hooks/useTranslation";
 import { rootLayoutRef } from "@services/appControlService";
 import { swRegistration } from "@services/otherRefs";
-import { createChatPopupRef } from "@services/popupService";
+import { createChatPopupRef, userPopupRef } from "@services/popupService";
 import { LayoutGroup } from "framer-motion";
 import { lazy, useEffect, useImperativeHandle, useState, type Ref } from "react";
 import { createBrowserRouter, createHashRouter, Outlet, RouterProvider } from "react-router-dom";
@@ -74,6 +75,7 @@ function RootLayout(props: RootLayoutProps) {
                     </div>
                     <MorphThing ref={morphThingRef} />
                     <CreateChatPopup ref={createChatPopupRef} />
+                    <UserPopup ref={userPopupRef} />
                 </LayoutGroup>
             </main>
         </div>
