@@ -54,7 +54,7 @@ function HomePage() {
 
     return (
         <div className={styles.main}>
-            <LeftPart user={user} onChatClick={openChat} leftPartRef={leftPartRef} />
+            <LeftPart onChatClick={openChat} leftPartRef={leftPartRef} />
             <RightPart openedChat={openedChat} user={user} closeChat={closeChat} />
         </div>
     );

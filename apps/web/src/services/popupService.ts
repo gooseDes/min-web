@@ -36,12 +36,30 @@ export const closeCreateChatPopup = () => {
 // User Popup
 export const userPopupRef = React.createRef<PopupHandle>();
 
+let isUserPopupOpen = false;
+const userPopupListeners = new Set<() => void>();
+
+export const subscribeToUserPopup = (listener: () => void) => {
+    userPopupListeners.add(listener);
+    return () => userPopupListeners.delete(listener);
+};
+
+const notifyUserPopupListeners = () => {
+    userPopupListeners.forEach(listener => listener());
+};
+
+export const isUserPopupVisible = () => isUserPopupOpen;
+
 export const openUserPopup = () => {
     setIsAppBlurred(true);
+    isUserPopupOpen = true;
+    notifyUserPopupListeners();
     userPopupRef.current?.open();
 };
 
 export const closeUserPopup = () => {
     setIsAppBlurred(false);
+    isUserPopupOpen = false;
+    notifyUserPopupListeners();
     userPopupRef.current?.close();
 };

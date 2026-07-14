@@ -27,31 +27,6 @@
     overflow: visible;
 }
 
-.userPanel {
-    @extend .panel;
-
-    height: 80px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    overflow: hidden;
-
-    @include mobile {
-        position: absolute;
-        bottom: $padding * 2;
-        left: $padding * 2;
-        width: calc(100dvw - $padding * 4);
-        height: 60px;
-        padding: 2.5px;
-    }
-}
-
-.iconButton {
-    height: 50px;
-}
-
 .header {
     display: flex;
     flex-direction: row;
