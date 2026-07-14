@@ -1,10 +1,10 @@
 import IconButton from "@components/IconButton";
 import { faSignIn } from "@fortawesome/free-solid-svg-icons";
-import useNavigateMin from "@hooks/useNavigation";
+import useNavigation from "@hooks/useNavigation";
 import styles from "./UserPanelButton.module.scss";
 
 function SignInButton() {
-    const navigate = useNavigateMin();
+    const navigate = useNavigation();
 
     return (
         <IconButton
