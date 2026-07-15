@@ -31,9 +31,13 @@ struct Asset {
     browser_download_url: String,
 }
 
-fn apply_update(app: AppHandle) {
+fn ask_for_update<F, Fut>(app: AppHandle, callback: F)
+where
+    F: FnOnce() -> Fut + Send + 'static,
+    Fut: std::future::Future<Output = ()> + Send + 'static,
+{
     app.dialog()
-        .message("New update is installed. Apply now?")
+        .message("A new version is available. Would you like to update?")
         .title("Min Desktop Update")
         .kind(MessageDialogKind::Info)
         .buttons(MessageDialogButtons::OkCancelCustom(
@@ -42,7 +46,8 @@ fn apply_update(app: AppHandle) {
         ))
         .show(move |confirmed: bool| {
             if confirmed {
-                app.restart();
+                let fut = callback();
+                tokio::spawn(fut);
             }
         });
 }
@@ -55,8 +60,6 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
             app.package_info().version,
             update.version
         );
-
-        let mut downloaded = 0;
 
         if is_archlinux() {
             println!("Checking for Arch Linux update...");
@@ -92,26 +95,28 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
                     }
 
                     println!("Download completed. Installing...");
-                    match Command::new("pkexec")
-                        .arg("pacman")
-                        .arg("-U")
-                        .arg(path.clone())
-                        .arg("--noconfirm")
-                        .output()
-                    {
-                        Ok(output) => {
-                            if output.status.success() {
-                                println!("Installed successfully! Restarting...");
-                                apply_update(app);
-                            } else {
-                                println!(
-                                    "Failed to install: {}",
-                                    String::from_utf8_lossy(&output.stderr)
-                                );
+                    ask_for_update(app.clone(), move || async move {
+                        match Command::new("pkexec")
+                            .arg("pacman")
+                            .arg("-U")
+                            .arg(path.clone())
+                            .arg("--noconfirm")
+                            .output()
+                        {
+                            Ok(output) => {
+                                if output.status.success() {
+                                    println!("Installed successfully! Restarting...");
+                                    app.restart();
+                                } else {
+                                    println!(
+                                        "Failed to install: {}",
+                                        String::from_utf8_lossy(&output.stderr)
+                                    );
+                                }
                             }
+                            Err(e) => println!("Failed to install: {}", e),
                         }
-                        Err(e) => println!("Failed to install: {}", e),
-                    }
+                    });
                 } else {
                     println!("No matching asset found.");
                 }
@@ -123,23 +128,30 @@ async fn check_for_updates(app: AppHandle) -> Result<(), Box<dyn std::error::Err
                 );
             }
         } else {
-            update
-                .download_and_install(
-                    move |chunk_length, total_length| {
-                        downloaded += chunk_length;
-                        if let Some(total) = total_length {
-                            let percentage = (downloaded as f64 / total as f64) * 100.0;
-                            println!("Download progress: {:.2}%", percentage);
-                        }
-                    },
-                    move || {
-                        println!("Download finished! Applying update...");
-                    },
-                )
-                .await?;
+            ask_for_update(app.clone(), move || async move {
+                let mut downloaded = 0;
 
-            println!("Update installed successfully! Restarting application...");
-            apply_update(app);
+                if let Err(e) = update
+                    .download_and_install(
+                        move |chunk_length, total_length| {
+                            downloaded += chunk_length;
+                            if let Some(total) = total_length {
+                                let percentage = (downloaded as f64 / total as f64) * 100.0;
+                                println!("Download progress: {:.2}%", percentage);
+                            }
+                        },
+                        move || {
+                            println!("Download finished! Applying update...");
+                        },
+                    )
+                    .await
+                {
+                    eprintln!("Failed to download and install update: {}", e);
+                } else {
+                    println!("Update installed successfully! Restarting application...");
+                    app.restart();
+                }
+            });
         }
     } else {
         println!("No update available.");
