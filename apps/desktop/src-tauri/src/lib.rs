@@ -47,7 +47,7 @@ where
         .show(move |confirmed: bool| {
             if confirmed {
                 let fut = callback();
-                tokio::spawn(fut);
+                tauri::async_runtime::spawn(fut);
             }
         });
 }
