@@ -70,9 +70,8 @@ function RootLayout(props: RootLayoutProps) {
         <div className="app-container">
             <main className={styles.appContent}>
                 <LayoutGroup id="layout_group">
-                    <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`}>
-                        <Outlet />
-                    </div>
+                    <Outlet />
+                    <div className={`${styles.blurrable} ${isBlurred ? styles.blurred : ""}`} />
                     <MorphThing ref={morphThingRef} />
                     <CreateChatPopup ref={createChatPopupRef} />
                     <UserPopup ref={userPopupRef} />
