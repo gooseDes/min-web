@@ -1,7 +1,7 @@
 import CreateChatPopup from "@components/HomePage/CreateChatPopup";
-import UserPopup from "@components/HomePage/UserPopup";
+import UserPopup from "@components/HomePage/UserPopup/UserPopup";
 import { TranslationProvider } from "@contexts/TranslationProvider";
-import { setItem } from "@hooks/useLocalStorage";
+import useLocalStorage from "@hooks/useLocalStorage";
 import useTranslation from "@hooks/useTranslation";
 import { rootLayoutRef } from "@services/appControlService";
 import { swRegistration } from "@services/otherRefs";
@@ -31,6 +31,8 @@ function RootLayout(props: RootLayoutProps) {
     const { ref } = props;
 
     const { changeLanguage } = useTranslation();
+    const [_appState, setAppState] = useLocalStorage("appState");
+
     const [isBlurred, setIsBlurred] = useState<boolean>(false);
 
     useImperativeHandle(ref, () => ({
@@ -39,7 +41,7 @@ function RootLayout(props: RootLayoutProps) {
 
     useEffect(() => {
         initSocket();
-        setItem("appState", "normal");
+        setAppState("normal");
 
         if (!isTauri() && "serviceWorker" in navigator) {
             const registerSW = () => {
@@ -59,7 +61,7 @@ function RootLayout(props: RootLayoutProps) {
                 return () => window.removeEventListener("load", registerSW);
             }
         }
-    }, []);
+    }, [setAppState]);
 
     useEffect(() => {
         Translation.init();

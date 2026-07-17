@@ -1,11 +1,5 @@
 @use "@/index.module.scss" as *;
 
-.avatar {
-    width: 50%;
-    aspect-ratio: 1;
-    border-radius: 999px;
-}
-
 .content {
     display: flex;
     flex: 1;

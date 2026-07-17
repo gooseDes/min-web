@@ -183,3 +183,9 @@ button {
     color: $secondary-color;
     font-weight: 400;
 }
+
+.flat {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}

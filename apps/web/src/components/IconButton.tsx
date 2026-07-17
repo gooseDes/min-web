@@ -1,5 +1,5 @@
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion";
 import Icon from "./Icon";
 import styles from "./IconButton.module.scss";
 
@@ -19,6 +19,30 @@ function IconButton(props: IconButtonProps) {
             {...rest}
         >
             <Icon icon={icon} size={size} />
+        </motion.button>
+    );
+}
+
+export function AnimatedIconButton(props: IconButtonProps) {
+    const { icon, size, className, ...rest } = props;
+
+    return (
+        <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className={`${styles.container} ${className}`}
+            {...rest}
+        >
+            <AnimatePresence mode="popLayout">
+                <motion.div
+                    key={(icon.valueOf() as any).iconName}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                >
+                    <Icon icon={icon} size={size} />
+                </motion.div>
+            </AnimatePresence>
         </motion.button>
     );
 }

@@ -4,8 +4,8 @@ import { isUserPopupVisible, openUserPopup, subscribeToUserPopup } from "@servic
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./UserPanel.module.scss";
-import ChangeLanguageButton from "./UserPanelButtons/ChangeLanguageButton";
-import SignInButton from "./UserPanelButtons/SignInButton";
+import ChangeLanguageButton from "./UserPopup/buttons/ChangeLanguageButton";
+import SignInButton from "./UserPopup/buttons/SignInButton";
 
 function UserPanel() {
     const [user] = useLocalStorage("user");
@@ -29,7 +29,8 @@ function UserPanel() {
                     <motion.button
                         className={clickableProfileStyles.container}
                         style={{ flex: 1 }}
-                        whileTap={{ scale: 0.9 }}
+                        whileHover={{ scale: 1 }}
+                        whileTap={{ scale: 1 }}
                         onClick={openUserPopup}
                     >
                         <motion.img
